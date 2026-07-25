@@ -11,6 +11,12 @@ Buffer, plánovanie ani zber metrík. `npm run check:public` kontroluje verejný
 zdrojový povrch aj hotový statický export. Credentials zostávajú mimo repozitára
 a logov.
 
+ChatGPT používa verejný `/visual-playbook.json`, kompaktný
+`/visual-playbook.md` a sanitizovaný `/visual-assets.json`. Tieto exporty vznikajú
+z rovnakého kanonického playbooku a projektového registra ako web. Verejný asset
+manifest obsahuje iba stavy `approved`, `reference-only` alebo `blocked`; interné
+evidence a citlivé poznámky sa neexportujú.
+
 Push do `main` najprv spustí celý `verify:pages` gate. Až potom workflow vytvorí
 čerstvý statický export, zapíše overený commit a s obmedzeným `contents: write`
 oprávnením aktualizuje iba vetvu `gh-pages`. GitHub Pages číta koreň tejto vetvy.

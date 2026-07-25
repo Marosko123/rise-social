@@ -42,5 +42,9 @@ describe('GitHub workflow supply-chain baseline', () => {
     expect(workflow).toContain('fetch "robots.txt"');
     expect(workflow).toContain('fetch "sitemap.xml"');
     expect(workflow).toContain('fetch "llms.txt"');
+    expect(workflow).toContain('fetch "visual-playbook/"');
+    expect(workflow).toContain('fetch "visual-playbook.json"');
+    expect(workflow).toContain('fetch "visual-playbook.md"');
+    expect(workflow).toContain('fetch "visual-assets.json"');
   });
 });

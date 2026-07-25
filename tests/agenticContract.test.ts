@@ -92,4 +92,35 @@ describe('portable agentic contract', () => {
       'measurement',
     ]);
   });
+
+  test('gives ChatGPT and every visual skill one canonical generation playbook', () => {
+    const playbookPath = 'brand/visual-generation-playbook.v1.ts';
+    const chatgpt = readFileSync(
+      join(root, 'CHATGPT_PROJECT_INSTRUCTIONS.md'),
+      'utf8',
+    );
+    expect(chatgpt).toContain(playbookPath);
+    expect(chatgpt).toContain(
+      'https://marosko123.github.io/rise-social/visual-playbook.json',
+    );
+    expect(chatgpt).toContain(
+      'https://marosko123.github.io/rise-social/visual-assets.json',
+    );
+    expect(chatgpt).toContain('“vytvor obrázok”');
+
+    for (const skillName of [
+      'rise-brand-context',
+      'rise-asset-librarian',
+      'rise-visual-director',
+      'rise-generative-visual',
+      'rise-visual-qa',
+    ]) {
+      expect(
+        readFileSync(
+          join(root, '.agents', 'skills', skillName, 'SKILL.md'),
+          'utf8',
+        ),
+      ).toContain(playbookPath);
+    }
+  });
 });

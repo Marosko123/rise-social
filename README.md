@@ -17,6 +17,7 @@ npm run dev
 
 Review: `http://127.0.0.1:4173/review`
 Content plán: `http://127.0.0.1:4173/content-plan`
+Vizuálny playbook: `http://127.0.0.1:4173/content-plan#visual-generation-title`
 
 Aplikácia počúva iba na `127.0.0.1`. Bez cloudu funguje výskum, lokálny review,
 manuálne schválenie aj export PNG/PDF.
@@ -24,8 +25,16 @@ manuálne schválenie aj export PNG/PDF.
 Verejná prezentácia: `https://marosko123.github.io/rise-social/`
 
 GitHub Pages obsahuje iba statický content plán a bezpečnú read-only ukážku
-reviewu. Neobsahuje SQLite, lokálne runy, API, AI runner, schvaľovanie, export,
-Buffer, plánovanie ani publikovanie.
+reviewu. Verejný ChatGPT-ready vizuálny systém je na:
+
+- `https://marosko123.github.io/rise-social/visual-playbook/`
+- `https://marosko123.github.io/rise-social/visual-playbook.json`
+- `https://marosko123.github.io/rise-social/visual-playbook.md`
+- `https://marosko123.github.io/rise-social/visual-assets.json`
+
+Neobsahuje SQLite, lokálne runy, API, AI runner, schvaľovanie, export, Buffer,
+plánovanie ani publikovanie. Asset manifest nezverejňuje interné práva ani
+citlivé poznámky.
 
 ## Pracovný tok
 

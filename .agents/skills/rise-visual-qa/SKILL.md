@@ -13,10 +13,18 @@ Rendered PNG/PDF/video preview, visual direction, selected assets, provenance, a
 
 ## Workflow
 
-1. Check 1080×1350 output, 84 px safe margin, slide number, title lines, overflow, contrast and text density.
-2. Inspect the full carousel, Instagram 3×3, mobile feed and Facebook/LinkedIn crops.
-3. Compare UI/logo/diagram with the approved asset; inspect AI output for nonsense text, distorted objects and fake data.
-4. Return blockers before approval; video needs captions and a clear silent first frame.
+1. Read `brand/visual-generation-playbook.v1.ts`; validate its version, mandatory
+   source URLs, exact palette signals, negative prompt and complete prompt
+   contract in provenance.
+2. Check 1080×1350 output, 84 px safe margin, slide number, title lines, overflow,
+   WCAG AA contrast and text density.
+3. Inspect the full carousel, Instagram 3×3, mobile feed and Facebook/LinkedIn crops.
+4. Compare UI/logo/diagram pixel-for-pixel with the approved asset; inspect AI
+   output at 100% for nonsense text, distorted objects, fake data, glossy/cyberpunk
+   drift, implausible light and broken contact shadows.
+5. Return blockers before approval; video needs captions and a clear silent first frame.
+6. Require platform, dimensions, crop, alt text, AI provenance and reference
+   asset roles in the result package.
 
 ## Output contract
 
@@ -24,7 +32,9 @@ Pass/fail report with asset IDs, crop, findings, alt-text result and required hu
 
 ## Stop conditions
 
-Stop on unreadable type, unsafe crop, absent alt text, changed logo/UI, rights gap, generated person/text/chart, or uninspected video captions.
+Stop on missing source manifest or playbook version, unreadable type, unsafe crop,
+absent alt text, changed logo/UI, rights gap, generated person/text/chart, brand
+drift or uninspected video captions.
 
 ## Pressure test
 

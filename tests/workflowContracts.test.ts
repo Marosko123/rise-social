@@ -325,7 +325,9 @@ describe('Rise Social Studio v2 executable workflow', () => {
         visualDirections: [{ id: 'direction-ai', visualClass: 'branded-diagram', rationale: 'test', narrative: 'test', layout: 'diagram', assetIds: ['rise-owned'], crop: 'center', safeZones: ['84 px'], allowGenerativeVisuals: true }],
         generationRecipes: [{
           visualDirectionId: 'direction-ai', model: 'test', prompt: 'Human developer beside Rise logo and dashboard metrics.',
-          negativePrompt: 'none', referenceAssetIds: ['rise-owned'], parameters: {}, disclosure: 'AI visual',
+          negativePrompt: 'none', sourceUrls: [], referenceAssetIds: ['rise-owned'],
+          referenceRoles: [{ assetId: 'rise-owned', role: 'content-evidence', preserve: 'Keep the source unchanged.' }],
+          parameters: {}, disclosure: 'AI visual',
           generatedAt: '2026-07-25T00:00:00.000Z', generationApproved: true, generationApprovedAt: '2026-07-24T00:00:00.000Z',
           width: 1080, height: 1350, allowGenerativeVisuals: true, subject: 'abstract',
         }], runNumber: 1,

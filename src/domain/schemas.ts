@@ -353,9 +353,28 @@ export type VisualDirection = z.infer<typeof VisualDirectionSchema>;
 export const GenerationRecipeSchema = z.object({
   visualDirectionId: z.string().min(1),
   model: z.string().min(1).max(500),
+  playbookVersion: z.literal('rise-visual-generation-v1').optional(),
   prompt: z.string().min(1).max(4_000),
   negativePrompt: z.string().max(2_000).optional(),
+  sourceUrls: z.array(z.url()).max(20).default([]),
+  project: z.string().min(1).max(500).optional(),
+  projectSourceUrl: z.url().optional(),
   referenceAssetIds: z.array(z.string().min(1)).max(20),
+  referenceRoles: z
+    .array(
+      z.object({
+        assetId: z.string().min(1),
+        role: z.enum([
+          'content-evidence',
+          'protected-ui',
+          'composition-reference',
+          'abstract-style-reference',
+        ]),
+        preserve: z.string().min(1).max(1_000),
+      }),
+    )
+    .max(20)
+    .default([]),
   parameters: z.record(z.string(), z.unknown()),
   disclosure: z.string().min(1).max(1_000),
   generatedAt: z.iso.datetime(),
@@ -363,6 +382,9 @@ export const GenerationRecipeSchema = z.object({
   generationApprovedAt: z.iso.datetime(),
   width: z.number().int().positive(),
   height: z.number().int().positive(),
+  platform: PlatformSchema.optional(),
+  crop: z.string().min(1).max(500).optional(),
+  altText: z.string().min(1).max(1_000).optional(),
   allowGenerativeVisuals: z.literal(true),
   subject: z.enum(['abstract', 'editorial-material']).optional(),
 });

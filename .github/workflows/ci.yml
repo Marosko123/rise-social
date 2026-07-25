@@ -120,9 +120,18 @@ jobs:
           fetch "robots.txt" robots.txt
           fetch "sitemap.xml" sitemap.xml
           fetch "llms.txt" llms.txt
+          fetch "visual-playbook/" visual-playbook.html
+          fetch "visual-playbook.json" visual-playbook.json
+          fetch "visual-playbook.md" visual-playbook.md
+          fetch "visual-assets.json" visual-assets.json
           grep -F "90-dňový content plán" "$smoke_dir/root.html"
           grep -F "90-dňový content plán" "$smoke_dir/content-plan.html"
           grep -F "nič nie je publikované" "$smoke_dir/review.html"
           grep -F "$BASE_URL" "$smoke_dir/robots.txt"
           grep -F "$BASE_URL" "$smoke_dir/sitemap.xml"
           grep -F "$BASE_URL" "$smoke_dir/llms.txt"
+          grep -F "Ako má ChatGPT tvoriť Rise vizuály" "$smoke_dir/visual-playbook.html"
+          grep -F "rise-visual-generation-v1" "$smoke_dir/visual-playbook.json"
+          grep -F "# Rise Visual System" "$smoke_dir/visual-playbook.md"
+          grep -F "\"projects\"" "$smoke_dir/visual-assets.json"
+          grep -F "\"assets\"" "$smoke_dir/visual-assets.json"

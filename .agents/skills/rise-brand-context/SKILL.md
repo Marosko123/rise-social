@@ -5,10 +5,14 @@ description: Use when creating or reviewing Rise.sk social copy, visuals, themes
 
 # Rise brand context
 
-Read `brand/voice.sk.json`, `brand/visual-tokens.json` and relevant published Rise
-pages. Keep software, products, data and delivery dominant. The profile identity is
+Read `brand/voice.sk.json`, `brand/visual-tokens.json`,
+`brand/visual-generation-playbook.v1.ts` and relevant published Rise pages. Keep
+software, products, data and delivery dominant. The profile identity is
 `Rise.sk`: “Softvér, ktorý prináša výsledky.” and “Softvér, dáta a AI. Jeden tím od
 návrhu po prevádzku.”
+
+In public ChatGPT context, load the canonical contract from
+`https://marosko123.github.io/rise-social/visual-playbook.json`.
 
 ## Inputs
 
@@ -24,7 +28,9 @@ Approved brief, platform, public evidence, selected asset candidates and profile
    functional explanation. Gold signals hierarchy, never fills every slide.
 5. Prefer authentic product UI, screenshots, team photos or branded diagrams in
    that order before licensed external media and approved abstract generation.
-4. Check that every statement can be supported by a public source or is clearly opinion.
+6. For any generated layer, return the playbook mood, composition, material,
+   lighting, reference order and blocked AI clichés before writing a prompt.
+7. Check that every statement can be supported by a public source or is clearly opinion.
 
 ## Output contract
 

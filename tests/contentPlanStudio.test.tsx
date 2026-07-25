@@ -6,6 +6,7 @@ import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, test } from 'vitest';
 
 import { ContentPlanStudio } from '@/components/ContentPlanStudio';
+import { VisualPlaybook } from '@/components/VisualPlaybook';
 import { RISE_CONTENT_PLAN } from '@/contentPlan/plan';
 
 afterEach(cleanup);
@@ -24,6 +25,17 @@ describe('ContentPlanStudio', () => {
     expect(screen.getByRole('heading', { name: '30-dňový pilot' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Ďalších 60 dní' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Úlohy kanálov' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: 'Ako má ChatGPT tvoriť Rise vizuály' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: /OpenAI prompting guide/i }),
+    ).toHaveAttribute(
+      'href',
+      'https://developers.openai.com/cookbook/examples/multimodal/image-gen-models-prompting-guide',
+    );
+    expect(screen.getAllByText(/#080807/).length).toBeGreaterThan(0);
+    expect(screen.getByText(/Nie cyberpunk. Nie AI klišé./i)).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Profilový základ' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'KPI a rozhodnutie po 90 dňoch' })).toBeInTheDocument();
     expect(screen.getByText('Aktuálny zdrojový radar')).toBeInTheDocument();
@@ -90,5 +102,23 @@ describe('ContentPlanStudio', () => {
     expect(screen.getAllByText(/asset ID: rise-home/i).length).toBeGreaterThan(0);
     expect(document.querySelector('.synthetic-person')).not.toBeInTheDocument();
     expect(document.querySelector('.fake-ui')).not.toBeInTheDocument();
+  });
+});
+
+describe('VisualPlaybook', () => {
+  test('explains platform formats, series recipes and generation approval semantics', () => {
+    render(<VisualPlaybook headingLevel="h1" />);
+
+    expect(
+      screen.getByRole('heading', {
+        name: 'Ako má ChatGPT tvoriť Rise vizuály',
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getAllByText('1080 × 1350 px').length).toBeGreaterThan(0);
+    expect(screen.getByText('Inside the Build')).toBeInTheDocument();
+    expect(screen.getByText('People Behind the Product')).toBeInTheDocument();
+    expect(
+      screen.getByText(/téma bez priameho pokynu.*art directions/i),
+    ).toBeInTheDocument();
   });
 });

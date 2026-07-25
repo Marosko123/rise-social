@@ -18,6 +18,12 @@ only approved content packs. SQLite owns drafts and temporary receipts.
 - Compare topic, title, opening and promised takeaway with imported history before drafting.
 - High-risk briefs stop before drafting: client results, metrics, regulated topics,
   competitors, non-public stories, named people and generative imagery.
+- Before any image prompt, read `brand/visual-generation-playbook.v1.ts`, open the
+  exact public Rise case study and bind approved asset IDs; generated output may
+  only be a separate abstract/editorial layer.
+- In public ChatGPT context, bootstrap from `/visual-playbook.json` and
+  `/visual-assets.json`. A direct “vytvor/generuj obrázok” approves only that
+  generation request; a topic alone stops at art directions.
 - Write concrete Slovak in a direct, calm, polite and friendly company voice.
 - Route every variant through `rise-linkedin-post`, `rise-instagram-post` or
   `rise-facebook-post`; never reuse one platform caption unchanged.

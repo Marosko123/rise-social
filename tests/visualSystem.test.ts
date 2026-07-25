@@ -19,6 +19,7 @@ import {
   qaPostBeforeRender,
   qaRenderedSlides,
 } from '@/visuals/visualQa';
+import { RISE_VISUAL_GENERATION_PLAYBOOK_V1 } from '../brand/visual-generation-playbook.v1';
 import { createFixtureDraft } from './fixtures';
 import type { Platform } from '@/domain/schemas';
 
@@ -129,6 +130,85 @@ describe('Rise visual asset catalogue', () => {
 });
 
 describe('carousel templates and visual QA', () => {
+  test('grounds every generated direction in the Rise brand, public evidence and official guidance', () => {
+    expect(RISE_VISUAL_GENERATION_PLAYBOOK_V1.sources.map(source => source.id)).toEqual(
+      expect.arrayContaining([
+        'rise-home',
+        'rise-portfolio',
+        'openai-image-prompting',
+        'openai-image-generation',
+        'w3c-contrast',
+        'instagram-image-resolution',
+        'linkedin-image-specifications',
+        'facebook-page-image-dimensions',
+      ]),
+    );
+    expect(RISE_VISUAL_GENERATION_PLAYBOOK_V1.referenceOrder.slice(0, 3)).toEqual([
+      'relevant-rise-project-page',
+      'approved-rise-asset',
+      'rise-home',
+    ]);
+    expect(RISE_VISUAL_GENERATION_PLAYBOOK_V1.brandLock.palette).toMatchObject({
+      canvas: '#080807',
+      surface: '#0C0C0C',
+      gold: '#DAB549',
+      strongText: '#F8F4EC',
+    });
+    expect(RISE_VISUAL_GENERATION_PLAYBOOK_V1.promptContract).toEqual(
+      expect.arrayContaining([
+        'purpose',
+        'source-references',
+        'subject',
+        'composition',
+        'materials',
+        'lighting',
+        'brand-lock',
+        'preserve',
+        'exclude',
+        'output',
+      ]),
+    );
+    expect(RISE_VISUAL_GENERATION_PLAYBOOK_V1.platformFormats).toMatchObject({
+      instagramCarousel: {
+        width: 1080,
+        height: 1350,
+        safeMargin: 84,
+      },
+      verticalVideo: {
+        width: 1080,
+        height: 1920,
+      },
+      linkedinDocument: {
+        minPages: 4,
+        maxPages: 8,
+      },
+      linkedinCover: {
+        width: 4200,
+        height: 700,
+      },
+      facebookCover: {
+        width: 851,
+        height: 315,
+      },
+    });
+    expect(
+      RISE_VISUAL_GENERATION_PLAYBOOK_V1.seriesRecipes.map(
+        recipe => recipe.id,
+      ),
+    ).toEqual([
+      'inside-the-build',
+      'decision-note',
+      'growth-system',
+      'signal-vs-noise',
+      'people-behind-the-product',
+    ]);
+    expect(
+      RISE_VISUAL_GENERATION_PLAYBOOK_V1.sources.every(
+        source => source.checkedAt && source.expiresAt,
+      ),
+    ).toBe(true);
+  });
+
   test('provides the four approved narrative templates and a safe legacy default', () => {
     expect(CAROUSEL_TEMPLATES['product-anatomy'].slides).toHaveLength(6);
     expect(CAROUSEL_TEMPLATES['decision-note'].slides).toHaveLength(7);
@@ -196,16 +276,106 @@ describe('carousel templates and visual QA', () => {
         generationApproved: true,
         generationApprovedAt: '2026-07-25T07:59:00.000Z',
         generatedAt: '2026-07-25T08:00:00.000Z',
-        prompt: 'Abstract editorial layers of warm mineral material and data paths, no text.',
+        prompt:
+          'Abstract editorial layers in an asymmetrical composition with matte mineral material, soft directional light and 65% negative space. Canvas #080807 with a small #DAB549 accent, no text.',
         negativePrompt: 'people, logo, text, UI, dashboard, chart, metric',
         disclosure: 'Abstraktná AI ilustrácia, schválená pred tvorbou.',
         referenceAssetIds: [],
-        parameters: {},
+        playbookVersion: 'rise-visual-generation-v1',
+        sourceUrls: [
+          'https://rise.sk/',
+          'https://rise.sk/portfolio',
+          'https://rise.sk/portfolio/rise-sk',
+          'https://developers.openai.com/cookbook/examples/multimodal/image-gen-models-prompting-guide',
+          'https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum',
+        ],
+        project: 'Rise.sk',
+        projectSourceUrl: 'https://rise.sk/portfolio/rise-sk',
+        parameters: { quality: 'high' },
         width: 1080,
         height: 1350,
         subject: 'abstract',
+        platform: 'instagram',
+        crop: '4:5 master with 84 px safe margin',
+        altText:
+          'Tri matné vrstvy sa spájajú do jednej pokojnej rozhodovacej cesty.',
       }).passed,
     ).toBe(true);
+  });
+
+  test('blocks generation without a negative prompt and output metadata', () => {
+    const base = {
+      visualDirectionId: 'direction-1',
+      model: 'image-model',
+      allowGenerativeVisuals: true as const,
+      generationApproved: true as const,
+      generationApprovedAt: '2026-07-25T07:59:00.000Z',
+      generatedAt: '2026-07-25T08:00:00.000Z',
+      prompt:
+        'Abstract editorial layers in an asymmetrical composition with matte mineral material, soft directional light and 65% negative space. Canvas #080807 with a small #DAB549 accent.',
+      disclosure: 'Abstraktná AI ilustrácia.',
+      referenceAssetIds: [],
+      playbookVersion: 'rise-visual-generation-v1' as const,
+      sourceUrls: [
+        'https://rise.sk/',
+        'https://rise.sk/portfolio',
+        'https://rise.sk/portfolio/rise-sk',
+        'https://developers.openai.com/cookbook/examples/multimodal/image-gen-models-prompting-guide',
+        'https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum',
+      ],
+      project: 'Rise.sk',
+      projectSourceUrl: 'https://rise.sk/portfolio/rise-sk',
+      parameters: { quality: 'high' },
+      width: 1080,
+      height: 1350,
+      subject: 'abstract' as const,
+    };
+
+    const report = assessGenerationRecipe(base);
+
+    expect(report.passed).toBe(false);
+    expect(report.findings.map(finding => finding.code)).toEqual(
+      expect.arrayContaining(['generation-negative', 'generation-output']),
+    );
+  });
+
+  test('requires a declared role and preserve rule for every reference asset', () => {
+    const report = assessGenerationRecipe({
+      visualDirectionId: 'direction-1',
+      model: 'image-model',
+      allowGenerativeVisuals: true,
+      generationApproved: true,
+      generationApprovedAt: '2026-07-25T07:59:00.000Z',
+      generatedAt: '2026-07-25T08:00:00.000Z',
+      prompt:
+        'Abstract editorial layers in an asymmetrical composition with matte mineral material, soft directional light and 65% negative space. Canvas #080807 with a small #DAB549 accent.',
+      negativePrompt: 'people, logo, text, UI, dashboard, chart, metric',
+      disclosure: 'Abstraktná AI ilustrácia.',
+      referenceAssetIds: ['rise-home'],
+      referenceRoles: [],
+      playbookVersion: 'rise-visual-generation-v1',
+      sourceUrls: [
+        'https://rise.sk/',
+        'https://rise.sk/portfolio',
+        'https://rise.sk/portfolio/rise-sk',
+        'https://developers.openai.com/cookbook/examples/multimodal/image-gen-models-prompting-guide',
+        'https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum',
+      ],
+      project: 'Rise.sk',
+      projectSourceUrl: 'https://rise.sk/portfolio/rise-sk',
+      parameters: { quality: 'high' },
+      width: 1080,
+      height: 1350,
+      subject: 'abstract',
+      platform: 'instagram',
+      crop: '4:5 master with 84 px safe margin',
+      altText: 'Pokojná abstraktná dátová vrstva.',
+    });
+
+    expect(report.passed).toBe(false);
+    expect(report.findings.map(finding => finding.code)).toContain(
+      'generation-reference',
+    );
   });
 
   test('blocks Slovak prohibited subjects and approval that follows generation output', () => {
@@ -226,7 +396,7 @@ describe('carousel templates and visual QA', () => {
     };
     expect(assessGenerationRecipe({ ...base, generationApprovedAt: '2026-07-25T08:01:00.000Z' }).passed).toBe(false);
     expect(assessGenerationRecipe({ ...base, generationApprovedAt: 'not-a-date' }).passed).toBe(false);
-    expect(assessGenerationRecipe({ ...base, prompt: 'Abstraktná vrstva materiálu.', generationApprovedAt: '2026-07-25T07:59:00.000Z' }).passed).toBe(true);
+    expect(assessGenerationRecipe({ ...base, prompt: 'Abstraktná vrstva materiálu.', generationApprovedAt: '2026-07-25T07:59:00.000Z' }).passed).toBe(false);
   });
 
   test('requires explicit rights confirmation and coherent redaction state for final selection', () => {

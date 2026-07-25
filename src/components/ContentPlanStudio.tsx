@@ -12,6 +12,7 @@ import type {
   DisclosureLevel,
 } from '@/contentPlan/schemas';
 import { RISE_PUBLIC_ASSET_CATALOG_V1 } from '../../brand/assets.v1';
+import { VisualPlaybook } from '@/components/VisualPlaybook';
 
 type PillarFilter = ContentPillar | 'all';
 
@@ -337,6 +338,8 @@ export function ContentPlanStudio({ plan }: { plan: ContentPlan }) {
           ))}
         </div>
       </section>
+
+      <VisualPlaybook />
 
       <section className="rollout-section" aria-labelledby="rollout-title">
         <div className="plan-section-head">

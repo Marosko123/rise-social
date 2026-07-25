@@ -2,6 +2,7 @@ import { readFile, stat } from 'node:fs/promises';
 
 import { GenerationRecipeSchema, type AssetRecord, type PostConcept } from '@/domain/schemas';
 import { isAssetRenderable } from '@/visuals/assetCatalog';
+import { RISE_VISUAL_GENERATION_PLAYBOOK_V1 } from '../../brand/visual-generation-playbook.v1';
 
 import { CAROUSEL_TEMPLATES, resolveCarouselTemplate, type CarouselTemplateId, type VisualLayout } from './carouselTemplates';
 
@@ -23,6 +24,12 @@ export type VisualQaFinding = {
     | 'asset-path-mismatch'
     | 'generation-provenance'
     | 'generation-subject'
+    | 'generation-playbook'
+    | 'generation-source'
+    | 'generation-brand'
+    | 'generation-negative'
+    | 'generation-output'
+    | 'generation-reference'
     | 'missing-file'
     | 'empty-file'
     | 'invalid-png'
@@ -90,6 +97,77 @@ export function assessGenerationRecipe(input: unknown): VisualQaReport {
     findings.push({
       code: 'generation-subject',
       message: 'Generatívny vizuál môže pokrývať iba abstraktný alebo editoriálny koncept bez ľudí, loga, textu, UI a metrík.',
+    });
+  }
+  if (recipe.playbookVersion !== RISE_VISUAL_GENERATION_PLAYBOOK_V1.id) {
+    findings.push({
+      code: 'generation-playbook',
+      message: 'Generatívny recept musí používať aktuálny Rise visual-generation playbook.',
+    });
+  }
+  const sourceUrls = new Set(recipe.sourceUrls);
+  const missingSources =
+    RISE_VISUAL_GENERATION_PLAYBOOK_V1.requiredRecipeSources.filter(
+      url => !sourceUrls.has(url),
+    );
+  if (missingSources.length > 0) {
+    findings.push({
+      code: 'generation-source',
+      message: `Generatívny recept nemá povinné verejné Rise a odborné zdroje: ${missingSources.join(', ')}`,
+    });
+  }
+  if (
+    !recipe.project?.trim() ||
+    !recipe.projectSourceUrl ||
+    !sourceUrls.has(recipe.projectSourceUrl)
+  ) {
+    findings.push({
+      code: 'generation-source',
+      message:
+        'Generatívny recept musí pomenovať projekt, presnú verejnú Rise case study a zaradiť ju medzi zdroje.',
+    });
+  }
+  const roleByAssetId = new Map(
+    recipe.referenceRoles.map(reference => [reference.assetId, reference]),
+  );
+  if (
+    recipe.referenceAssetIds.some(
+      assetId => !roleByAssetId.get(assetId)?.preserve.trim(),
+    )
+  ) {
+    findings.push({
+      code: 'generation-reference',
+      message:
+        'Každý referenčný asset ID musí mať deklarovanú rolu a preserve pravidlo.',
+    });
+  }
+  const normalizedPrompt = recipe.prompt.toLocaleLowerCase('sk');
+  const missingSignals =
+    RISE_VISUAL_GENERATION_PLAYBOOK_V1.requiredPromptSignals.filter(
+      alternatives =>
+        !alternatives.some(signal =>
+          normalizedPrompt.includes(signal.toLocaleLowerCase('sk')),
+        ),
+    );
+  if (missingSignals.length > 0) {
+    findings.push({
+      code: 'generation-brand',
+      message:
+        'Prompt musí explicitne určiť Rise farby, matný materiál, svetlo, kompozíciu a negatívny priestor.',
+    });
+  }
+  if (!recipe.negativePrompt || recipe.negativePrompt.trim().length < 20) {
+    findings.push({
+      code: 'generation-negative',
+      message:
+        'Generatívny recept musí obsahovať konkrétny negative prompt pre zakázané osoby, UI, text, logá, metriky a AI klišé.',
+    });
+  }
+  if (!recipe.platform || !recipe.crop?.trim() || !recipe.altText?.trim()) {
+    findings.push({
+      code: 'generation-output',
+      message:
+        'Generatívny výstup musí deklarovať platformu, rozmery, crop a zmysluplný alt text.',
     });
   }
   return report(findings, ['Skontrolovať artefakty UI, logá, predmety a zmenu klientského UI.']);

@@ -13,9 +13,19 @@ Approved brief, public asset catalogue, intended platforms, project and proposed
 
 ## Workflow
 
-1. Prefer real product UI, public Rise diagram, approved team photo, new documentation, licensed external media, then approved abstract generation.
-2. Record origin, owner, license, project, confidentiality, platform permission, rights reference, quality, crop and redaction status.
-3. Choose only renderable records; keep a rights note in the review digest.
+1. Read `brand/visual-generation-playbook.v1.ts`. In public ChatGPT context,
+   read `/visual-playbook.json` and `/visual-assets.json` from Rise Social Studio.
+2. Open the exact public Rise case study, then match candidates to stable catalogue
+   asset IDs. A portfolio thumbnail alone is not project evidence.
+3. Prefer real product UI, public Rise diagram, approved team photo, new
+   documentation, licensed external media, then approved abstract generation.
+4. Record origin, owner, license, source URL, project, confidentiality, platform
+   permission, rights reference, quality, crop and redaction status.
+5. Give every image reference a declared role: content evidence, protected UI,
+   composition reference or abstract style reference.
+6. Choose only renderable records; keep a rights note in the review digest.
+7. Treat `reference-only` as art-direction context and `blocked` as unusable.
+   Only `approved` assets may be proposed for their listed platforms.
 
 ## Output contract
 

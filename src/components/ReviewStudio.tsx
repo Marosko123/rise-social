@@ -640,7 +640,19 @@ export function ReviewStudio({
                 <div className="claim-row" key={`generation-${recipe.visualDirectionId}`}>
                   <strong>Pôvod AI vizuálu: {recipe.model}</strong>
                   <p>{recipe.disclosure}</p>
-                  <small>Schválené {formatSchedule(recipe.generationApprovedAt)} · referencie: {recipe.referenceAssetIds.join(', ') || 'žiadne'}.</small>
+                  <small>
+                    {recipe.project ?? 'Projekt neuvedený'} ·{' '}
+                    {recipe.platform ?? 'platforma neuvedená'} · {recipe.width} ×{' '}
+                    {recipe.height} px · crop: {recipe.crop ?? 'neuvedený'}.
+                    Schválené {formatSchedule(recipe.generationApprovedAt)} ·
+                    referencie:{' '}
+                    {(recipe.referenceRoles ?? []).length > 0
+                      ? (recipe.referenceRoles ?? [])
+                          .map(reference => `${reference.assetId} (${reference.role})`)
+                          .join(', ')
+                      : recipe.referenceAssetIds.join(', ') || 'žiadne'}
+                    .
+                  </small>
                 </div>
               ))}
               {reviewStages.map(([label, review]) => review && (

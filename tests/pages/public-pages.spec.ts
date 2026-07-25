@@ -142,6 +142,83 @@ test.describe('GitHub Pages public presentation', () => {
     expect(violations).toEqual([]);
   });
 
+  test('serves the visual playbook responsively with machine-readable contracts', async ({
+    page,
+    request,
+  }) => {
+    const failedResponses: string[] = [];
+    page.on('response', response => {
+      if (response.status() >= 400) {
+        failedResponses.push(`${response.status()} ${response.url()}`);
+      }
+    });
+
+    await page.setViewportSize({ width: 1440, height: 1000 });
+    await page.goto(`${BASE_PATH}/visual-playbook/`);
+    await expect(
+      page.getByRole('heading', {
+        name: 'Ako má ChatGPT tvoriť Rise vizuály',
+      }),
+    ).toBeVisible();
+    await expect(page.getByText('Inside the Build')).toBeVisible();
+    await expect(page.getByText('People Behind the Product')).toBeVisible();
+    expect(
+      await page.evaluate(
+        () =>
+          document.documentElement.scrollWidth -
+          document.documentElement.clientWidth,
+      ),
+    ).toBe(0);
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.reload();
+    expect(
+      await page.evaluate(
+        () =>
+          document.documentElement.scrollWidth -
+          document.documentElement.clientWidth,
+      ),
+    ).toBe(0);
+
+    const playbookResponse = await request.get(
+      `${PAGES_ORIGIN}${BASE_PATH}/visual-playbook.json`,
+    );
+    expect(playbookResponse.status()).toBe(200);
+    expect(playbookResponse.headers()['content-type']).toContain(
+      'application/json',
+    );
+    const playbook = await playbookResponse.json();
+    expect(playbook.playbook.id).toBe('rise-visual-generation-v1');
+    expect(playbook.playbook.seriesRecipes).toHaveLength(5);
+
+    const markdownResponse = await request.get(
+      `${PAGES_ORIGIN}${BASE_PATH}/visual-playbook.md`,
+    );
+    expect(markdownResponse.status()).toBe(200);
+    expect(markdownResponse.headers()['content-type']).toContain(
+      'text/markdown',
+    );
+    expect(await markdownResponse.text()).toContain('# Rise Visual System');
+
+    const assetsResponse = await request.get(
+      `${PAGES_ORIGIN}${BASE_PATH}/visual-assets.json`,
+    );
+    expect(assetsResponse.status()).toBe(200);
+    const assetsText = await assetsResponse.text();
+    expect(assetsText).not.toContain('rightsEvidence');
+    expect(assetsText).not.toContain('rightsReference');
+    const manifest = JSON.parse(assetsText);
+    expect(manifest.projects).toHaveLength(11);
+    expect(manifest.assets).toHaveLength(12);
+    expect(
+      manifest.assets.every((asset: { previewUrl: string }) =>
+        asset.previewUrl.startsWith('https://rise.sk/portfolio/'),
+      ),
+    ).toBe(true);
+
+    expect(failedResponses).toEqual([]);
+  });
+
   test('serves crawler and ChatGPT discovery files with absolute Pages links', async ({
     request,
   }) => {
@@ -154,6 +231,15 @@ test.describe('GitHub Pages public presentation', () => {
         `${PUBLIC_ORIGIN}${BASE_PATH}/`,
       );
     }
+    const llms = await (
+      await request.get(`${PAGES_ORIGIN}${BASE_PATH}/llms.txt`)
+    ).text();
+    expect(llms).toContain(
+      `${PUBLIC_ORIGIN}${BASE_PATH}/visual-playbook.json`,
+    );
+    expect(llms).toContain(
+      `${PUBLIC_ORIGIN}${BASE_PATH}/visual-assets.json`,
+    );
 
     const apiResponse = await request.get(
       `${PAGES_ORIGIN}${BASE_PATH}/api/runs/demo/approve/`,
