@@ -1,0 +1,20 @@
+{
+  "required": [
+    "claim-citations",
+    "source-allowlist",
+    "topic-title-opening-continuity",
+    "slovak-human-voice",
+    "platform-hashtag-limits",
+    "https-links",
+    "alt-text",
+    "carousel-overflow",
+    "approval-digest"
+  ],
+  "minimumScore": {
+    "factualAccuracy": 4,
+    "voice": 4,
+    "specificity": 4,
+    "continuity": 4,
+    "visualClarity": 4
+  }
+}

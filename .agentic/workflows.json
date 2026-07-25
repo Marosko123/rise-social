@@ -1,0 +1,30 @@
+{
+  "development": [
+    "intake",
+    "plan",
+    "human-approval",
+    "build",
+    "tests",
+    "independent-review",
+    "draft-pr"
+  ],
+  "content": [
+    "topic-intake",
+    "business-brief",
+    "risk-gate",
+    "research",
+    "claim-ledger",
+    "continuity",
+    "visual-directions",
+    "asset-rights",
+    "draft",
+    "platform-specialization",
+    "render",
+    "independent-critique",
+    "revision",
+    "independent-validation",
+    "human-approval",
+    "export-schedule-approval",
+    "measurement"
+  ]
+}

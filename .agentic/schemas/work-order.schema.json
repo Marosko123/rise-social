@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rise.sk/schemas/social-work-order-v1.json",
+  "type": "object",
+  "required": ["issueUrl", "workstream", "scope", "risk", "humanApproval"],
+  "properties": {
+    "issueUrl": { "type": "string", "format": "uri" },
+    "workstream": { "enum": ["Application", "Content", "Operations"] },
+    "scope": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "risk": { "enum": ["Low", "Medium", "High"] },
+    "humanApproval": { "type": "boolean", "const": true }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,11 @@
+{
+  "development": ["plan", "draft-pr", "merge", "deployment"],
+  "content": ["high-risk-brief", "export", "buffer-drafts", "schedule"],
+  "absoluteStops": [
+    "generative-image-without-explicit-approval",
+    "unsupported-client-result",
+    "unconfirmed-person-or-handle",
+    "paid-feature-required",
+    "partial-publication"
+  ]
+}

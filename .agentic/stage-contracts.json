@@ -1,0 +1,71 @@
+{
+  "topic-intake": {
+    "requires": ["topic", "audience", "goal", "mode", "generative-visual-policy"],
+    "stopOn": ["empty-topic", "private-input"]
+  },
+  "business-brief": {
+    "requires": ["buyer-question", "rise-perspective", "business-fit", "desired-action", "unioned-risk-flags"],
+    "stopOn": ["missing-business-fit", "missing-buyer-question"]
+  },
+  "risk-gate": {
+    "requires": ["risk-classification", "explicit-human-approval-for-risk"],
+    "stopOn": ["client-result", "metric", "regulated-topic", "competitor", "non-public-story", "named-person", "generative-image"]
+  },
+  "research": {
+    "requires": ["allowlisted-source", "checkedAt", "public-research-text"],
+    "stopOn": ["unsupported-claim", "private-source", "credential-or-private-data"]
+  },
+  "claim-ledger": {
+    "requires": ["stable-claim-id", "exact-source-binding", "evidence-excerpt", "checkedAt", "risk", "expiresAt"],
+    "stopOn": ["expired-claim", "source-mismatch", "missing-evidence"]
+  },
+  "continuity": {
+    "requires": ["prior-topic-check", "prior-title-check", "prior-opening-check", "promised-takeaway-check"],
+    "stopOn": ["duplicate-opening", "duplicate-promise", "duplicate-core"]
+  },
+  "visual-directions": {
+    "requires": ["template", "asset-ids", "layout", "crop", "safe-zones", "alt-text-intent"],
+    "stopOn": ["fake-ui", "fake-data", "generic-ai-cliche"]
+  },
+  "asset-rights": {
+    "requires": ["origin", "owner", "license", "confidentiality", "allowed-platforms", "rights-reference", "redaction-status"],
+    "stopOn": ["confidential-asset", "unconfirmed-rights", "pending-redaction", "unapproved-client-visual"]
+  },
+  "draft": {
+    "requires": ["adaptive-post-count", "claim-addressable-copy", "distinct-campaign-siblings", "platform-adaptation"],
+    "stopOn": ["invented-result", "unadapted-caption"]
+  },
+  "platform-specialization": {
+    "requires": ["rise-linkedin-post", "rise-instagram-post", "rise-facebook-post", "distinct-caption", "platform-link-policy", "platform-visual-contract"],
+    "stopOn": ["raw-instagram-url", "facebook-over-900", "linkedin-without-perspective"]
+  },
+  "render": {
+    "requires": ["dimensions", "safe-margins", "contrast", "alt-text", "crop-review", "video-captions-when-applicable"],
+    "stopOn": ["overflow", "unsafe-crop", "unreadable-text", "ai-artifact"]
+  },
+  "independent-critique": {
+    "requires": ["different-model", "facts", "voice", "continuity", "visuals", "business-fit"],
+    "maxRevisionPasses": 1,
+    "stopOn": ["score-below-4", "approved-false", "blocker"]
+  },
+  "revision": {
+    "requires": ["single-author-revision", "revision-instructions"],
+    "stopOn": ["second-automatic-revision"]
+  },
+  "independent-validation": {
+    "requires": ["different-context", "all-scores-at-least-4", "approved-true", "visual-and-claim-recheck"],
+    "stopOn": ["failed-second-review"]
+  },
+  "human-approval": {
+    "requires": ["digest", "revision", "captions", "claims-sources", "visual-directions", "crops-redactions", "asset-rights", "generation-provenance-when-present"],
+    "invalidatedBy": ["caption-edit", "visual-edit", "source-edit", "crop-edit", "asset-rights-edit", "generation-provenance-edit"]
+  },
+  "export-schedule-approval": {
+    "requires": ["fresh-human-approval", "separate-export-or-schedule-action"],
+    "stopOn": ["stale-digest", "missing-export-schedule-approval"]
+  },
+  "measurement": {
+    "requires": ["platform-format-metrics", "utm-context", "proposed-experiment", "human-strategy-review"],
+    "stopOn": ["automatic-rule-change", "automatic-publication"]
+  }
+}

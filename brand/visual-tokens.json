@@ -1,0 +1,17 @@
+{
+  "canvas": { "width": 1080, "height": 1350 },
+  "carousel": { "minSlides": 4, "maxSlides": 8, "slideNumbering": true },
+  "grid": { "columns": 3, "puzzleTiles": false },
+  "mediaPriority": [
+    "product-screenshot",
+    "ui-detail",
+    "team-photo",
+    "branded-diagram"
+  ],
+  "generativeImagery": "explicit-human-approval-only",
+  "accessibility": {
+    "contrast": "WCAG-AA",
+    "safeMargins": true,
+    "altTextRequired": true
+  }
+}

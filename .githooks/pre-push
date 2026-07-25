@@ -1,0 +1,5 @@
+#!/bin/sh
+set -eu
+
+npm run check:lfs
+npm run verify:push

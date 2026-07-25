@@ -1,0 +1,12 @@
+# Rise Social Studio
+
+> Verejná read-only prezentácia profesionálneho obsahového systému Rise.sk.
+
+- 90-dňový plán: https://marosko123.github.io/rise-social/
+- Samostatná URL plánu: https://marosko123.github.io/rise-social/content-plan/
+- Bezpečná demo kontrola: https://marosko123.github.io/rise-social/review/
+- Portfólio Rise.sk: https://rise.sk/portfolio
+
+Verejná verzia neobsahuje SQLite drafty, API, AI runner, schvaľovanie, export,
+Buffer, plánovanie ani publikovanie. Všetky faktické tvrdenia sa majú overovať
+vo verejných zdrojoch uvedených priamo pri obsahu.

@@ -1,0 +1,45 @@
+{
+  "id": "rise-sk-social-v1",
+  "language": "sk-SK",
+  "voice": ["priamy", "pokojný", "slušný", "konkrétny", "priateľský"],
+  "companyVoice": "prvá osoba množného čísla",
+  "formalAddress": ["Vy", "Váš"],
+  "preferredWords": [
+    "softvér",
+    "pracovný tok",
+    "dáta",
+    "rozhodnutie",
+    "zodpovednosť",
+    "prevádzka",
+    "overiť",
+    "postaviť",
+    "zjednodušiť"
+  ],
+  "blockedPhrases": [
+    "v dnešnej dynamickej dobe",
+    "s nadšením oznamujeme",
+    "revolučný",
+    "game-changer",
+    "odomknúť potenciál",
+    "posunúť na ďalšiu úroveň",
+    "nie je to len X, je to Y"
+  ],
+  "hashtags": {
+    "instagram": { "min": 2, "max": 5 },
+    "linkedin": { "min": 0, "max": 3 },
+    "facebook": { "min": 0, "max": 2 },
+    "vocabulary": [
+      "#softver",
+      "#automatizacia",
+      "#produkt",
+      "#vyvoj",
+      "#data",
+      "#ai",
+      "#grantai",
+      "#mojafirma",
+      "#rise",
+      "#timrise"
+    ]
+  },
+  "emoji": { "default": 0, "max": 1, "asBullets": false }
+}

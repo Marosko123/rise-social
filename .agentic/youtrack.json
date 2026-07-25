@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "baseUrl": "https://rise.youtrack.cloud",
+  "project": "RISE",
+  "currentBoard": {
+    "id": "204-1",
+    "name": "Rise Kanban Board",
+    "verifiedAt": "2026-07-23"
+  },
+  "taskState": {
+    "provider": "youtrack",
+    "idempotencyMarker": "Run ID",
+    "automaticPrepareCreate": true,
+    "manualMutationsRequireApply": true
+  },
+  "contentStageMapping": {
+    "Inbox": "Ready",
+    "Needs Brief": "Planning",
+    "Research": "Planning",
+    "Drafting": "Building",
+    "Review": "Human Review",
+    "Approved": "Human Review",
+    "Scheduled": "Human Review",
+    "Published / Done": "Complete",
+    "Blocked": "Blocked"
+  },
+  "verifiedFields": ["Type", "State"],
+  "plannedFields": [
+    "Execution Mode",
+    "Agent Stage",
+    "Risk",
+    "Data Class",
+    "Approval Status",
+    "Agent Run ID",
+    "Repository",
+    "Acceptance Criteria",
+    "Test Plan"
+  ],
+  "forbidden": ["delete issue", "cross-project write", "skip human approval"]
+}

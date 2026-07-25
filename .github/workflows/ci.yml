@@ -1,0 +1,98 @@
+name: Quality & GitHub Pages
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      CI: true
+      RISE_SOCIAL_DB_PATH: data/ci-studio.sqlite
+      PLAYWRIGHT_PRODUCTION: "1"
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          lfs: true
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run check:lfs
+      - run: npm run verify:pages
+      - name: Configure GitHub Pages
+        if: github.event_name != 'pull_request' && github.event.repository.visibility == 'public'
+        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b
+      - name: Upload GitHub Pages artifact
+        if: github.event_name != 'pull_request' && github.event.repository.visibility == 'public'
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b
+        with:
+          path: public-site/out
+
+  deploy:
+    if: github.event_name != 'pull_request' && github.event.repository.visibility == 'public'
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e
+
+  live-smoke:
+    if: github.event_name != 'pull_request' && github.event.repository.visibility == 'public'
+    needs: deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Verify public Pages routes and markers
+        env:
+          BASE_URL: https://marosko123.github.io/rise-social/
+        run: |
+          smoke_dir="$(mktemp -d)"
+          trap 'rm -rf "$smoke_dir"' EXIT
+          fetch() {
+            curl \
+              --fail \
+              --silent \
+              --show-error \
+              --location \
+              --retry 12 \
+              --retry-all-errors \
+              --retry-delay 5 \
+              "${BASE_URL}$1" \
+              --output "$smoke_dir/$2"
+          }
+          fetch "" root.html
+          fetch "content-plan/" content-plan.html
+          fetch "review/" review.html
+          fetch "robots.txt" robots.txt
+          fetch "sitemap.xml" sitemap.xml
+          fetch "llms.txt" llms.txt
+          grep -F "90-dňový content plán" "$smoke_dir/root.html"
+          grep -F "90-dňový content plán" "$smoke_dir/content-plan.html"
+          grep -F "nič nie je publikované" "$smoke_dir/review.html"
+          grep -F "$BASE_URL" "$smoke_dir/robots.txt"
+          grep -F "$BASE_URL" "$smoke_dir/sitemap.xml"
+          grep -F "$BASE_URL" "$smoke_dir/llms.txt"

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rise.sk/schemas/archive-manifest-v1.json",
+  "type": "object",
+  "required": ["runId", "digest", "archivedAt", "revision", "approvedOnly", "files"],
+  "properties": {
+    "runId": { "type": "string", "minLength": 1 },
+    "digest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "archivedAt": { "type": "string", "format": "date-time" },
+    "revision": { "type": "integer", "minimum": 1 },
+    "approvedOnly": { "const": true },
+    "files": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": false
+}

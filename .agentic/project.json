@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "project": "rise-social",
+  "mode": "shadow",
+  "tracker": {
+    "provider": "youtrack",
+    "baseUrl": "https://rise.youtrack.cloud",
+    "project": "RISE",
+    "boardId": "204-1",
+    "singleSourceOfTruth": true
+  },
+  "repository": {
+    "provider": "github",
+    "slug": "Marosko123/rise-social",
+    "visibility": "private"
+  },
+  "localUrl": "http://127.0.0.1:4173",
+  "commands": {
+    "test": "npm test",
+    "lint": "npm run lint",
+    "typecheck": "npm run typecheck",
+    "build": "npm run build",
+    "e2e": "npm run test:e2e",
+    "agentic": "npm run check:agentic",
+    "content": "npm run check:content"
+  },
+  "forbidden": {
+    "automaticMerge": true,
+    "automaticDeploy": true,
+    "automaticPublish": true,
+    "paidFeatures": true,
+    "credentialAccessByModels": true
+  }
+}

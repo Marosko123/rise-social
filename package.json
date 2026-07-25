@@ -1,0 +1,72 @@
+{
+  "name": "rise-social",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local, human-approved social content studio for Rise.sk.",
+  "type": "module",
+  "engines": {
+    "node": ">=24",
+    "npm": ">=11"
+  },
+  "bin": {
+    "rise-social": "./bin/rise-social.mjs"
+  },
+  "overrides": {
+    "brace-expansion": "5.0.8",
+    "postcss": "8.5.19",
+    "sharp": "0.35.3",
+    "tldts": "7.4.8"
+  },
+  "scripts": {
+    "dev": "next dev --hostname 127.0.0.1 --port 4173",
+    "build": "next build",
+    "start": "next start --hostname 127.0.0.1 --port 4173",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "build:pages": "next build public-site",
+    "test:pages": "playwright test --config=playwright.pages.config.ts",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "check:agentic": "node scripts/check-agentic-contract.mjs",
+    "check:content": "node scripts/check-content-contract.mjs",
+    "check:lfs": "node scripts/check-lfs-budget.mjs",
+    "check:public": "tsx scripts/check-public.ts",
+    "audit:ci": "npm audit --audit-level=high",
+    "verify": "npm run test && npm run lint && npm run typecheck && npm run check:agentic && npm run check:content && npm run build",
+    "verify:push": "npm run verify && npm run audit:ci",
+    "verify:pages": "npm run verify:push && npm run test:e2e && npm run check:public && npm run build:pages && npm run check:public && npm run test:pages",
+    "hooks:install": "git config core.hooksPath .githooks",
+    "rise-social": "tsx src/cli.ts"
+  },
+  "dependencies": {
+    "@fontsource/inter": "5.2.8",
+    "@fontsource/playfair-display": "5.2.8",
+    "archiver": "^7.0.1",
+    "cheerio": "^1.1.2",
+    "commander": "^14.0.2",
+    "dotenv": "^17.2.3",
+    "next": "15.5.21",
+    "playwright-core": "^1.61.1",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "3.3.6",
+    "@playwright/test": "^1.58.2",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/archiver": "^6.0.3",
+    "@types/node": "^24.10.13",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.4",
+    "eslint": "^9.39.2",
+    "eslint-config-next": "15.5.21",
+    "jsdom": "^27.4.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.0"
+  }
+}
