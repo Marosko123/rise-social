@@ -12,34 +12,31 @@ describe('GitHub workflow supply-chain baseline', () => {
     expect(workflow).toContain(
       'actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020',
     );
-    expect(workflow).toContain(
-      'actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b',
-    );
-    expect(workflow).toContain(
-      'actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b',
-    );
-    expect(workflow).toContain(
-      'actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e',
-    );
+    expect(workflow).not.toContain('actions/configure-pages@');
+    expect(workflow).not.toContain('actions/upload-pages-artifact@');
+    expect(workflow).not.toContain('actions/deploy-pages@');
     expect(workflow).toContain('npm run verify:pages');
+    expect(workflow).toContain('npm run build:pages');
   });
 
-  test('keeps verification read-only and grants deploy permissions only to Pages', () => {
+  test('keeps verification read-only and grants branch write only after verification', () => {
     expect(workflow).toMatch(/permissions:\s*\n\s+contents: read/);
     expect(workflow).toMatch(
-      /deploy:\s*[\s\S]*?permissions:\s*\n\s+contents: read\s*\n\s+pages: write\s*\n\s+id-token: write/,
+      /publish:\s*[\s\S]*?needs: verify[\s\S]*?permissions:\s*\n\s+contents: write/,
     );
+    expect(workflow).toContain('persist-credentials: true');
+    expect(workflow).toContain('HEAD:gh-pages');
     expect(workflow).toContain("if: github.event_name != 'pull_request'");
-    expect(workflow).toContain('environment:');
-    expect(workflow).toContain('name: github-pages');
     expect(workflow.match(/github\.event\.repository\.visibility == 'public'/g))
-      .toHaveLength(4);
+      .toHaveLength(2);
   });
 
-  test('never cancels an in-flight deploy and smoke-tests the live site', () => {
+  test('never cancels an in-flight publish and smoke-tests the exact live revision', () => {
     expect(workflow).toContain('cancel-in-progress: false');
-    expect(workflow).toContain('needs: deploy');
+    expect(workflow).toContain('needs: publish');
     expect(workflow).toContain('https://marosko123.github.io/rise-social/');
+    expect(workflow).toContain('deployment.txt');
+    expect(workflow).toContain('EXPECTED_SHA: ${{ github.sha }}');
     expect(workflow).toContain('fetch "content-plan/"');
     expect(workflow).toContain('fetch "review/"');
     expect(workflow).toContain('fetch "robots.txt"');

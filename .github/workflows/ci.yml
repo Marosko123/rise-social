@@ -34,44 +34,74 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - run: npm run check:lfs
       - run: npm run verify:pages
-      - name: Configure GitHub Pages
-        if: github.event_name != 'pull_request' && github.event.repository.visibility == 'public'
-        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b
-      - name: Upload GitHub Pages artifact
-        if: github.event_name != 'pull_request' && github.event.repository.visibility == 'public'
-        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b
-        with:
-          path: public-site/out
 
-  deploy:
+  publish:
     if: github.event_name != 'pull_request' && github.event.repository.visibility == 'public'
     needs: verify
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
-      contents: read
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      contents: write
     steps:
-      - name: Deploy GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          lfs: true
+          persist-credentials: true
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build:pages
+      - name: Record the verified source revision
+        run: printf '%s\n' "$GITHUB_SHA" > public-site/out/deployment.txt
+      - name: Publish the verified static export
+        run: |
+          publish_dir="$(mktemp -d)"
+          git fetch --no-tags origin gh-pages
+          git worktree add --detach "$publish_dir" origin/gh-pages
+          git -C "$publish_dir" switch --orphan pages-release
+          cp -R public-site/out/. "$publish_dir"/
+          git -C "$publish_dir" config user.name "github-actions[bot]"
+          git -C "$publish_dir" config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git -C "$publish_dir" add --all
+          if git -C "$publish_dir" diff --cached --quiet; then
+            exit 0
+          fi
+          git -C "$publish_dir" commit -m "deploy: ${GITHUB_SHA}"
+          remote_revision="$(git rev-parse origin/gh-pages)"
+          git -C "$publish_dir" push \
+            --force-with-lease="gh-pages:${remote_revision}" \
+            origin \
+            HEAD:gh-pages
 
   live-smoke:
     if: github.event_name != 'pull_request' && github.event.repository.visibility == 'public'
-    needs: deploy
+    needs: publish
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - name: Verify public Pages routes and markers
         env:
           BASE_URL: https://marosko123.github.io/rise-social/
+          EXPECTED_SHA: ${{ github.sha }}
         run: |
           smoke_dir="$(mktemp -d)"
           trap 'rm -rf "$smoke_dir"' EXIT
+          deployed=false
+          for attempt in $(seq 1 36); do
+            revision="$(curl --fail --silent --show-error --location "${BASE_URL}deployment.txt" || true)"
+            if [ "$revision" = "$EXPECTED_SHA" ]; then
+              deployed=true
+              break
+            fi
+            sleep 5
+          done
+          if [ "$deployed" != true ]; then
+            echo "Expected deployed revision $EXPECTED_SHA was not observed."
+            exit 1
+          fi
           fetch() {
             curl \
               --fail \

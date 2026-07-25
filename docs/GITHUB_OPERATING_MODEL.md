@@ -11,6 +11,11 @@ Buffer, plánovanie ani zber metrík. `npm run check:public` kontroluje verejný
 zdrojový povrch aj hotový statický export. Credentials zostávajú mimo repozitára
 a logov.
 
+Push do `main` najprv spustí celý `verify:pages` gate. Až potom workflow vytvorí
+čerstvý statický export, zapíše overený commit a s obmedzeným `contents: write`
+oprávnením aktualizuje iba vetvu `gh-pages`. GitHub Pages číta koreň tejto vetvy.
+Live smoke čaká na rovnaký commit a až potom kontroluje všetky verejné routy.
+
 Git LFS sleduje schválené PNG/PDF. Lokálny pre-push gate blokuje repozitár nad
 10 GiB. Account budget pre LFS musí zostať na 0 USD; aplikácia ho nemení.
 
