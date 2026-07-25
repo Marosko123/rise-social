@@ -22,6 +22,10 @@ import {
 import { createFixtureDraft } from './fixtures';
 import type { Platform } from '@/domain/schemas';
 
+const risePublicRoot = process.env.RISE_SK_PUBLIC_ROOT
+  ? resolve(process.env.RISE_SK_PUBLIC_ROOT)
+  : resolve(process.cwd(), '..', 'rise.sk', 'rise_webpage', 'public');
+
 describe('Rise visual asset catalogue', () => {
   test('covers all eleven public portfolio projects with complete public provenance', () => {
     const projects = new Set(RISE_ASSET_CATALOG.assets.map(asset => asset.project));
@@ -117,10 +121,9 @@ describe('Rise visual asset catalogue', () => {
     );
   });
 
-  test('has an existing public-tree file for every configured catalogue path', () => {
-    const publicRoot = resolve(process.cwd(), '..', 'rise.sk', 'rise_webpage', 'public');
+  test.runIf(existsSync(risePublicRoot))('has an existing public-tree file for every configured catalogue path', () => {
     for (const asset of RISE_ASSET_CATALOG.assets) {
-      expect(existsSync(resolveCatalogAssetPath(asset, publicRoot))).toBe(true);
+      expect(existsSync(resolveCatalogAssetPath(asset, risePublicRoot))).toBe(true);
     }
   });
 });
