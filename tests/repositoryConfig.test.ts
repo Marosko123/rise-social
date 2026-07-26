@@ -61,4 +61,17 @@ describe('repository safety configuration', () => {
     expect(() => assertWithinLfsBudget(10 * 1024 ** 3)).not.toThrow();
     expect(() => assertWithinLfsBudget(10 * 1024 ** 3 + 1)).toThrow(/10 GiB/i);
   });
+
+  test('keeps linked development worktrees outside the root test discovery surface', () => {
+    const vitestConfig = readFileSync(join(root, 'vitest.config.ts'), 'utf8');
+    const eslintConfig = readFileSync(join(root, 'eslint.config.mjs'), 'utf8');
+    const tsconfig = JSON.parse(readFileSync(join(root, 'tsconfig.json'), 'utf8')) as {
+      exclude: string[];
+    };
+
+    expect(vitestConfig).toContain('configDefaults.exclude');
+    expect(vitestConfig).toContain("'.worktrees/**'");
+    expect(eslintConfig).toContain("'.worktrees/**'");
+    expect(tsconfig.exclude).toContain('.worktrees');
+  });
 });

@@ -1,5 +1,5 @@
 import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vitest/config';
+import { configDefaults, defineConfig } from 'vitest/config';
 
 export default defineConfig({
   plugins: [react()],
@@ -10,7 +10,12 @@ export default defineConfig({
   },
   test: {
     environment: 'node',
-    exclude: ['tests/e2e/**', 'tests/pages/**', 'node_modules/**'],
+    exclude: [
+      ...configDefaults.exclude,
+      '.worktrees/**',
+      'tests/e2e/**',
+      'tests/pages/**',
+    ],
     coverage: {
       reporter: ['text', 'html'],
     },
