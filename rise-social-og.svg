@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title description">
+  <title id="title">Rise Social Studio</title>
+  <desc id="description">Softvér, dáta a AI. Jeden tím od návrhu po prevádzku.</desc>
+  <defs>
+    <radialGradient id="glow" cx="78%" cy="18%" r="55%">
+      <stop offset="0" stop-color="#dab549" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#080807" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fefbd8"/>
+      <stop offset=".56" stop-color="#dab549"/>
+      <stop offset="1" stop-color="#8b6723"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#080807"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <rect x="64" y="64" width="1072" height="502" rx="30" fill="none" stroke="#2b2924"/>
+  <circle cx="132" cy="132" r="34" fill="url(#gold)"/>
+  <text x="132" y="143" text-anchor="middle" fill="#1a1710" font-family="Georgia, serif" font-size="35" font-weight="700">R</text>
+  <text x="190" y="126" fill="#f8f4ec" font-family="Arial, sans-serif" font-size="22" font-weight="700" letter-spacing="4">RISE SOCIAL</text>
+  <text x="190" y="153" fill="#9b978e" font-family="Arial, sans-serif" font-size="18">Studio</text>
+  <text x="92" y="350" fill="#f8f4ec" font-family="Georgia, serif" font-size="76">Softvér, ktorý</text>
+  <text x="92" y="430" fill="#f8f4ec" font-family="Georgia, serif" font-size="76">prináša výsledky.</text>
+  <text x="94" y="506" fill="#dbc28c" font-family="Arial, sans-serif" font-size="22" letter-spacing="1.5">SOFTVÉR · DÁTA · AI · OD NÁVRHU PO PREVÁDZKU</text>
+</svg>
