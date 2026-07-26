@@ -1,13 +1,22 @@
-import { RISE_PUBLIC_ASSET_CATALOG_V1 } from '../../brand/assets.v1';
 import { RISE_BRAND_ASSET_MANIFEST_V1 } from '../../brand/brand-assets.v1';
 import { RISE_BRAND_COPY_V1 } from '../../brand/brand-copy.v1';
 import { INSTAGRAM_CAROUSEL_PLAYBOOK_V1 } from '../../brand/instagram-carousel-playbook.v1';
 import { RISE_VISUAL_GENERATION_PLAYBOOK_V1 } from '../../brand/visual-generation-playbook.v1';
 import { RISE_CONTENT_PLAN } from '@/contentPlan/plan';
+import { RISE_ASSET_CATALOG } from '@/visuals/assetCatalogData';
+export {
+  PUBLIC_CHATGPT_CONTEXT,
+  PUBLIC_STARTER_PACK,
+  STARTER_PACK_DRAFTS,
+  buildPublicStarterPack,
+  renderPublicChatGptContextMarkdown,
+  type PublicChatGptContextV2,
+  type PublicStarterPack,
+} from '@/public/chatGptContext';
 
 const PUBLIC_BASE_URL = 'https://marosko123.github.io/rise-social';
 const RISE_ORIGIN = 'https://rise.sk';
-const RIGHTS_CHECKED_AT = RISE_PUBLIC_ASSET_CATALOG_V1.checkedAt.slice(0, 10);
+const RIGHTS_CHECKED_AT = RISE_ASSET_CATALOG.checkedAt.slice(0, 10);
 const BLOCKED_PROJECTS = new Set([
   'Personálno-mzdový systém',
   'VIAC AKO NI(c)K',
@@ -37,51 +46,53 @@ function cropRule(visualClass: string): string {
 }
 
 function usageStatus(
-  project: string,
-  path: string,
+  asset: (typeof RISE_ASSET_CATALOG.assets)[number],
 ): PublicAssetUsageStatus {
-  if (project === 'Rise.sk' && !path.includes('/ai-edited/')) {
-    return 'approved';
-  }
-  if (BLOCKED_PROJECTS.has(project) || path.includes('/ai-edited/')) {
+  if (asset.aiEdited || BLOCKED_PROJECTS.has(asset.project)) {
     return 'blocked';
+  }
+  if (
+    asset.origin === 'rise-owned' &&
+    asset.rightsStatus === 'confirmed' &&
+    asset.approved
+  ) {
+    return 'approved';
   }
   return 'reference-only';
 }
 
-const publicAssets = RISE_PUBLIC_ASSET_CATALOG_V1.assets.map(
-  ([id, project, caseStudyUrl, path, visualClass, , quality]) => {
-    const status = usageStatus(project, path);
-    const aiEdited = path.includes('/ai-edited/');
-    const generated = visualClass === 'generated-illustration';
+const publicAssets = RISE_ASSET_CATALOG.assets.map(asset => {
+  const status = usageStatus(asset);
+  const generated = asset.visualClass === 'generated-illustration';
 
-    return {
-      id,
-      project,
-      caseStudyUrl,
-      previewUrl: new URL(path, RISE_ORIGIN).toString(),
-      visualClass,
-      recommendedUse: recommendedUse(visualClass),
-      allowedPlatforms:
-        status === 'approved'
-          ? (['instagram', 'linkedin', 'facebook'] as const)
-          : ([] as const),
-      crop: cropRule(visualClass),
-      quality,
-      usageStatus: status,
-      aiProvenance: aiEdited
-        ? 'AI-edited public composition; original UI must remain unchanged and the composition is blocked until explicit visual approval.'
-        : generated
-          ? 'Generated editorial source; it is not product evidence and remains blocked for this protected project.'
-          : 'No AI edit recorded for the public source asset.',
-      redaction:
-        BLOCKED_PROJECTS.has(project)
-          ? 'pending-human-review'
-          : 'not-required-for-reference',
-      rightsCheckedAt: RIGHTS_CHECKED_AT,
-    };
-  },
-);
+  return {
+    id: asset.id,
+    project: asset.project,
+    caseStudyUrl: asset.sourceUrl,
+    previewUrl: new URL(asset.path, RISE_ORIGIN).toString(),
+    visualClass: asset.visualClass,
+    recommendedUse: recommendedUse(asset.visualClass),
+    allowedPlatforms:
+      status === 'approved'
+        ? (['instagram', 'linkedin', 'facebook'] as const)
+        : ([] as const),
+    crop: cropRule(asset.visualClass),
+    quality: asset.qualityNote,
+    usageStatus: status,
+    rightsScope:
+      asset.origin === 'rise-owned' ? 'rise-owned' : 'client-gated',
+    aiProvenance: asset.aiEdited
+      ? 'AI-edited public composition; original UI must remain unchanged and the composition is blocked until explicit visual approval.'
+      : generated
+        ? 'Generated editorial source; it is not product evidence and remains blocked for this protected project.'
+        : 'No AI edit recorded for the public source asset.',
+    redaction:
+      BLOCKED_PROJECTS.has(asset.project)
+        ? 'pending-human-review'
+        : 'not-required-for-reference',
+    rightsCheckedAt: RIGHTS_CHECKED_AT,
+  };
+});
 
 const assetsByProject = new Map<string, string[]>();
 for (const asset of publicAssets) {
@@ -91,8 +102,8 @@ for (const asset of publicAssets) {
 }
 
 function safeVisualStrategy(project: (typeof RISE_CONTENT_PLAN.projects)[number]) {
-  if (project.id === 'rise-sk') {
-    return 'Použiť schválený reálny screenshot Rise.sk ako produktový dôkaz; generatívna vrstva môže byť iba oddelené pokojné pozadie.';
+  if (['rise-sk', 'mapatrhu', 'grantai', 'moja-firma'].includes(project.id)) {
+    return 'Použiť iba schválené reálne produktové UI alebo diagramy z uvedených asset ID. Text, logo a layout pridať deterministicky; prvé štyri týždne bez generatívnej vrstvy.';
   }
   if (project.requiresVisualApproval) {
     return 'Použiť iba anonymizovaný verejný kontext po osobitnej kontrole. Nevytvárať ľudí ani klientsky produkt; bezpečný fallback je originálny abstraktný diagram.';
@@ -130,6 +141,9 @@ export const PUBLIC_VISUAL_PLAYBOOK = {
   canonicalUrl: `${PUBLIC_BASE_URL}/visual-playbook.json`,
   humanReadableUrl: `${PUBLIC_BASE_URL}/visual-playbook/`,
   markdownUrl: `${PUBLIC_BASE_URL}/visual-playbook.md`,
+  chatGptContextUrl: `${PUBLIC_BASE_URL}/chatgpt-context.json`,
+  chatGptContextMarkdownUrl: `${PUBLIC_BASE_URL}/chatgpt-context.md`,
+  starterPackUrl: `${PUBLIC_BASE_URL}/starter-pack.json`,
   assetManifestUrl: `${PUBLIC_BASE_URL}/visual-assets.json`,
   instagramCarouselPlaybookUrl: `${PUBLIC_BASE_URL}/instagram-carousel-playbook.json`,
   brandAssetManifestUrl: `${PUBLIC_BASE_URL}/brand-assets.json`,
@@ -288,8 +302,10 @@ ${playbook.resultContract.map(item => `- ${item}`).join('\n')}
 
 ## Verejné dáta
 
+- Povinný ChatGPT kontext: ${PUBLIC_BASE_URL}/chatgpt-context.json
 - Asset manifest: ${PUBLIC_BASE_URL}/visual-assets.json
 - Strojový playbook: ${PUBLIC_BASE_URL}/visual-playbook.json
+- Schválený starter pack: ${PUBLIC_BASE_URL}/starter-pack.json
 - Obsahový plán: ${PUBLIC_BASE_URL}/content-plan/
 - Rise portfólio: https://rise.sk/portfolio
 

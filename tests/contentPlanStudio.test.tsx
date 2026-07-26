@@ -82,10 +82,10 @@ describe('ContentPlanStudio', () => {
     expect(firstEntry).toHaveTextContent('LinkedIn');
     expect(firstEntry).toHaveTextContent('Facebook');
     expect(firstEntry).toHaveTextContent(
-      'Štyri verejné katalógové UI kandidáty',
+      'Deterministický homepage cover',
     );
-    expect(firstEntry).toHaveTextContent(/katalógové assety/i);
-    expect(firstEntry).toHaveTextContent(/ľudskému schváleniu/i);
+    expect(firstEntry).toHaveTextContent(/Rise-owned verejné assety/i);
+    expect(firstEntry).toHaveTextContent(/ľudskému.*schváleniu/i);
     expect(
       screen.getByText(/Plán nie je publikačné schválenie/i),
     ).toBeInTheDocument();

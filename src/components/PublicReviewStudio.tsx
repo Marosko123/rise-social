@@ -5,6 +5,7 @@ import { useMemo, useState } from 'react';
 
 import type { Platform, Theme } from '@/domain/schemas';
 import type { PublicReviewModel } from '@/public/publicReviewModel';
+import { RiseLogoMark } from '@/components/RiseLogoMark';
 
 interface PublicReviewStudioProps {
   model: PublicReviewModel;
@@ -78,7 +79,7 @@ export function PublicReviewStudio({
     <main className="studio-shell">
       <header className="topbar">
         <Link className="brand" href="/" aria-label="Rise Social Studio">
-          <span className="brand-mark">R</span>
+          <RiseLogoMark className="brand-mark" />
           <span>
             <strong>Rise Social</strong>
             <small>Studio</small>
@@ -163,7 +164,7 @@ export function PublicReviewStudio({
             <div className="preview-image"></div>
             <div className="preview-wash"></div>
             <div className="preview-head">
-              <span className="preview-logo">R</span>
+              <RiseLogoMark className="preview-logo" />
               <span>{THEME_LABELS[post.theme]}</span>
             </div>
             <div className="preview-copy">

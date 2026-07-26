@@ -13,6 +13,7 @@ import type {
 } from '@/contentPlan/schemas';
 import { RISE_PUBLIC_ASSET_CATALOG_V1 } from '../../brand/assets.v1';
 import { VisualPlaybook } from '@/components/VisualPlaybook';
+import { RiseLogoMark } from '@/components/RiseLogoMark';
 
 type PillarFilter = ContentPillar | 'all';
 
@@ -245,7 +246,7 @@ export function ContentPlanStudio({ plan }: { plan: ContentPlan }) {
     <main className="content-plan-shell">
       <header className="plan-topbar">
         <Link className="brand" href="/review" aria-label="Rise Social Studio">
-          <span className="brand-mark">R</span>
+          <RiseLogoMark className="brand-mark" />
           <span>
             <strong>Rise Social</strong>
             <small>Operating plan</small>
@@ -663,7 +664,7 @@ export function ContentPlanStudio({ plan }: { plan: ContentPlan }) {
 
       <footer className="plan-footer">
         <div>
-          <span className="brand-mark">R</span>
+          <RiseLogoMark className="brand-mark" />
           <p>
             <strong>Plán nie je publikačné schválenie.</strong>
             Každý výstup ešte prejde zdrojmi, kontinuitou, právami, vizuálnou

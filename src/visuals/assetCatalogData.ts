@@ -18,7 +18,7 @@ export type CatalogAsset = AssetRecord & {
 };
 
 function isRiseOwnedProject(project: string): boolean {
-  return project === 'Rise.sk';
+  return ['Rise.sk', 'MapaTrhu', 'GrantAI', 'MojaFirma'].includes(project);
 }
 
 function catalogAsset(
@@ -53,7 +53,7 @@ function catalogAsset(
     sourceUrl,
     path,
     contentSha256,
-    approved: riseOwned,
+    approved: riseOwned && !aiEdited,
     rightsNote: riseOwned
       ? 'Rise-created web asset; rights are held by Rise.sk.'
       : 'Verejné zobrazenie na rise.sk nie je povolenie na opätovné použitie v sociálnych sieťach.',

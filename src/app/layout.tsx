@@ -7,8 +7,9 @@ import '@fontsource/playfair-display/latin-500.css';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Rise Social Studio',
-  description: 'Lokálna kontrola a export sociálneho obsahu Rise.sk.',
+  title: 'Rise.sk — ChatGPT brand context',
+  description:
+    'Kanonický kontext pre softvérovú identitu, produktové dôkazy, Rise branding a human-gated sociálne výstupy.',
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

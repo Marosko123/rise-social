@@ -1,6 +1,5 @@
-import { ContentPlanStudio } from '@/components/ContentPlanStudio';
-import { RISE_CONTENT_PLAN } from '@/contentPlan/plan';
+import { ChatGptHandoff } from '@/components/ChatGptHandoff';
 
-export default function PublicContentPlanHomePage() {
-  return <ContentPlanStudio plan={RISE_CONTENT_PLAN} />;
+export default function PublicChatGptHandoffPage() {
+  return <ChatGptHandoff />;
 }

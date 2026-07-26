@@ -1,9 +1,12 @@
 # Rise Social Studio
 
-> Verejná read-only prezentácia profesionálneho obsahového systému Rise.sk.
+> Rise.sk je softvérová a produktová firma. Nie je stavebná firma, developer
+> nehnuteľností ani realitná kancelária. MapaTrhu je dátový softvérový produkt.
 
-- 90-dňový plán: https://marosko123.github.io/rise-social/
-- Samostatná URL plánu: https://marosko123.github.io/rise-social/content-plan/
+- Povinný ChatGPT kontext: https://marosko123.github.io/rise-social/chatgpt-context.json
+- Kompaktný ChatGPT kontext: https://marosko123.github.io/rise-social/chatgpt-context.md
+- Root s kritickými pravidlami: https://marosko123.github.io/rise-social/
+- 90-dňový plán: https://marosko123.github.io/rise-social/content-plan/
 - Bezpečná demo kontrola: https://marosko123.github.io/rise-social/review/
 - Vizuálna príručka: https://marosko123.github.io/rise-social/visual-playbook/
 - Kompletný strojový kontrakt: https://marosko123.github.io/rise-social/visual-playbook.json
@@ -14,14 +17,16 @@
 - Instagram Carousel LLM dokument: https://marosko123.github.io/rise-social/instagram-carousel-playbook.md
 - Originálne Rise logá a fonty: https://marosko123.github.io/rise-social/brand-assets.json
 - Kanonické slovenské texty: https://marosko123.github.io/rise-social/brand-copy.json
+- Approval-gated starter pack: https://marosko123.github.io/rise-social/starter-pack.json
 - Portfólio Rise.sk: https://rise.sk/portfolio
 
 Verejná verzia neobsahuje SQLite drafty, API, AI runner, schvaľovanie, export,
 Buffer, plánovanie ani publikovanie. Všetky faktické tvrdenia sa majú overovať
 vo verejných zdrojoch uvedených priamo pri obsahu.
 
-Pri carouseli o aplikácii načítaj v poradí vizuálny playbook, brand-copy,
-brand-assets, instagram-carousel-playbook, visual-assets a presnú Rise case
-study. Pri tvorbe iného vizuálu načítaj playbook aj asset manifest. Téma bez priameho
-„vytvor/generuj obrázok“ pripraví iba art direction. Model nesmie vymyslieť
-klientske UI, ľudí, logo, text, metriky ani grafy.
+Najprv načítaj ChatGPT kontext. Pri carouseli o aplikácii potom načítaj
+brand-copy, brand-assets, instagram-carousel-playbook, visual-assets a presnú
+Rise case study. Pri inom vizuáli načítaj visual-playbook a asset manifest.
+Pri žiadosti o prvé obrázky vráť iba schválené médiá zo starter-pack.json.
+Ak je prázdny, zastav a negeneruj alternatívu. Model nesmie vymyslieť produkt,
+UI, ľudí, logo, text, metriky, grafy, stavebnú vizualizáciu ani realitný stock.

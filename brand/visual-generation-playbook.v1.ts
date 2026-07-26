@@ -191,8 +191,10 @@ No people, faces, hands, robots, brains, dashboards, UI, charts, metrics, logos,
 OUTPUT
 1080 × 1350 px composition, high-quality opaque image, crisp edges around the main object, quiet background, no embedded text.`,
   negativePrompt:
-    'people, person, face, hands, robot, android, AI brain, human silhouette, UI, interface, dashboard, app screen, browser, chart, graph, metric, number, text, typography, letters, logo, wordmark, watermark, code, hologram, neon, blue-purple cyberpunk glow, glossy plastic, generic stock 3D, floating particles, fake data, fake product',
+    'people, person, face, hands, robot, android, AI brain, human silhouette, UI, interface, dashboard, app screen, browser, chart, graph, metric, number, text, typography, letters, logo, wordmark, watermark, code, hologram, neon, blue-purple cyberpunk glow, construction render, developer housing, houses, apartments, real estate stock, synthetic person, glossy plastic, generic stock 3D, floating particles, fake data, fake product',
   generationPolicy: {
+    pilotFirstFourWeeks:
+      'Generatívne vrstvy produktových postov sú vypnuté. Hlavný vizuál musí vzniknúť deterministicky zo schváleného reálneho UI, pravého loga a Rise tokenov.',
     allowed: [
       'abstraktná dátová vrstva',
       'jednoduchý materiálový objekt',
@@ -204,6 +206,8 @@ OUTPUT
       'osoba, tím Rise alebo podobizeň',
       'logo, text, metrika, graf alebo kód',
       'vymyslený screenshot alebo výsledok',
+      'stavebná vizualizácia, domy, byty alebo realitný stock',
+      'modrý neón a modro-fialový cyberpunk',
     ],
   },
   platformFormats: {
@@ -334,7 +338,7 @@ OUTPUT
     topicOnly:
       'Téma bez priameho pokynu na vytvorenie obrázka pripraví 2–3 art directions a zastaví sa pred generovaním.',
     directGeneration:
-      'Priame „vytvor obrázok“ alebo „generuj obrázok“ je schválením generovania iba pre dané zadanie. Neobchádza zdroje, práva, brand-lock ani QA.',
+      'Pri žiadosti o prvé obrázky načítať starter-pack.json a vrátiť iba jeho schválené médiá. Ak je prázdny, zastaviť; negenerovať náhradu. Priame generovanie je možné až pri neskoršej osobitne schválenej abstraktnej vrstve a neobchádza zdroje, práva, brand-lock ani QA.',
     missingAsset:
       'Ak chýba schválený reálny screenshot, ChatGPT ho nevymyslí. Vyberie abstraktnú vrstvu alebo požiada o konkrétny asset.',
     deterministicAssembly:
