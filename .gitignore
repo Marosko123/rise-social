@@ -23,5 +23,6 @@ tmp/
 browser-state/
 playwright/.cache/
 .superpowers/
+.worktrees/
 .DS_Store
 --full-page
