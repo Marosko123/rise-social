@@ -25,10 +25,24 @@ describe('carousel document', () => {
 
     expect(html).toContain('width: 1080px');
     expect(html).toContain('height: 1350px');
+    expect(html).toContain('padding: 0 84px');
     expect(html).toContain('#DAB549');
+    expect(html).toContain('#080807');
+    expect(html).toContain('#0C0C0C');
+    expect(html).toContain('#141414');
+    expect(html).toContain('#2B2924');
+    expect(html).toContain('#F8F4EC');
+    expect(html).toContain('data:font/woff;base64,');
+    expect(html).toContain('data:font/ttf;base64,');
+    expect(html).toContain('data-rise-logo="official"');
+    expect(html).toContain('data-source="Rise_logo.svg"');
+    expect(html).not.toContain('file://');
     expect(html).toContain('overflow: hidden');
     expect(html).toContain('&lt;script&gt;alert(&quot;no&quot;)&lt;/script&gt;');
     expect(html).not.toContain('<script>alert');
+    expect(html).not.toContain('class="rise-mark"');
+    expect(html).not.toContain('class="orbit');
+    expect(html).not.toContain('class="signal"');
     expect(html.match(/data-slide=/g)).toHaveLength(4);
   });
 

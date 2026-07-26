@@ -34,6 +34,24 @@ describe('repository safety configuration', () => {
     expect(ci).not.toMatch(/BUFFER_|CLOUDINARY_|codex exec|claude --print/u);
   });
 
+  test('live smoke follows the ChatGPT-first root and approval-gated contracts', () => {
+    const ci = readFileSync(join(root, '.github', 'workflows', 'ci.yml'), 'utf8');
+
+    expect(ci).toContain(
+      'grep -F "Rise.sk je softvérová a produktová firma." "$smoke_dir/root.html"',
+    );
+    expect(ci).not.toContain(
+      'grep -F "90-dňový content plán" "$smoke_dir/root.html"',
+    );
+    expect(ci).toContain(
+      'fetch "chatgpt-context.json" chatgpt-context.json',
+    );
+    expect(ci).toContain('fetch "starter-pack.json" starter-pack.json');
+    expect(ci).toContain(
+      `grep -F '"status":"awaiting-human-approval"' "$smoke_dir/starter-pack.json"`,
+    );
+  });
+
   test('uses a blocking audit without a stale advisory exception', () => {
     const packageJson = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')) as {
       scripts: Record<string, string>;

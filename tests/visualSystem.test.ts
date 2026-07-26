@@ -47,7 +47,7 @@ describe('Rise visual asset catalogue', () => {
     const aiEdited = RISE_ASSET_CATALOG.assets.find(asset => asset.path?.includes('/ai-edited/'));
 
     expect(aiEdited).toMatchObject({ aiEdited: true, requiresVisualApproval: true, approved: false });
-    expect(aiEdited?.origin).toBe('client-approved');
+    expect(aiEdited?.origin).toBe('rise-owned');
   });
 
   test('prefers owned product proof and blocks unlicensed or unsuitable alternatives', () => {
@@ -65,7 +65,12 @@ describe('Rise visual asset catalogue', () => {
       },
     ];
 
-    expect(selectOwnedAsset(assets, { project: 'GrantAI', platform: 'linkedin' })).toBeUndefined();
+    expect(
+      selectOwnedAsset(assets, {
+        project: 'GrantAI',
+        platform: 'linkedin',
+      })?.id,
+    ).toBe('grantai-ui');
     expect(
       selectOwnedAsset([assets.at(-1)!], { project: 'GrantAI', platform: 'linkedin' }),
     ).toBeUndefined();
@@ -397,6 +402,52 @@ describe('carousel templates and visual QA', () => {
     expect(assessGenerationRecipe({ ...base, generationApprovedAt: '2026-07-25T08:01:00.000Z' }).passed).toBe(false);
     expect(assessGenerationRecipe({ ...base, generationApprovedAt: 'not-a-date' }).passed).toBe(false);
     expect(assessGenerationRecipe({ ...base, prompt: 'Abstraktná vrstva materiálu.', generationApprovedAt: '2026-07-25T07:59:00.000Z' }).passed).toBe(false);
+  });
+
+  test.each([
+    'developerské domy a nové byty',
+    'stavebná vizualizácia rezidenčného projektu',
+    'generic real estate stock photography',
+    'blue-purple cyberpunk neon scene',
+    'fake dashboard with invented metrics',
+    'synthetic person beside a robot',
+    'generated Rise logo and embedded text',
+  ])('blocks the brand-confusing generated subject: %s', unsafeSubject => {
+    const report = assessGenerationRecipe({
+      visualDirectionId: 'direction-brand-lock',
+      model: 'image-model',
+      allowGenerativeVisuals: true,
+      generationApproved: true,
+      generationApprovedAt: '2026-07-25T07:59:00.000Z',
+      generatedAt: '2026-07-25T08:00:00.000Z',
+      prompt:
+        `Abstract editorial layers in an asymmetrical composition with matte mineral material, soft directional light and 65% negative space. Canvas #080807 with a small #DAB549 accent. Subject: ${unsafeSubject}.`,
+      negativePrompt:
+        'people, logo, text, UI, dashboard, chart, metric, houses, apartments, real estate stock, cyberpunk',
+      disclosure: 'Abstraktná AI ilustrácia.',
+      referenceAssetIds: [],
+      playbookVersion: 'rise-visual-generation-v1',
+      sourceUrls: [
+        'https://rise.sk/',
+        'https://rise.sk/portfolio',
+        'https://rise.sk/portfolio/rise-sk',
+        'https://developers.openai.com/cookbook/examples/multimodal/image-gen-models-prompting-guide',
+        'https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum',
+      ],
+      project: 'Rise.sk',
+      projectSourceUrl: 'https://rise.sk/portfolio/rise-sk',
+      parameters: { quality: 'high' },
+      width: 1080,
+      height: 1350,
+      subject: 'abstract',
+      platform: 'instagram',
+      crop: '4:5 master with 84 px safe margin',
+      altText: 'Pokojná abstraktná editoriálna vrstva.',
+    });
+
+    expect(report.findings.map(finding => finding.code)).toContain(
+      'generation-subject',
+    );
   });
 
   test('requires explicit rights confirmation and coherent redaction state for final selection', () => {

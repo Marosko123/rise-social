@@ -127,22 +127,20 @@ describe('content plan contracts', () => {
     );
   });
 
-  test('rejects unknown or falsely-owned catalog assets at the plan boundary', () => {
+  test('accepts confirmed Rise-owned products and rejects falsely-owned client assets', () => {
     const unknownAsset = structuredClone(RISE_CONTENT_PLAN);
     unknownAsset.entries[0].assetSelection.assetIds = ['unknown-asset'];
     expect(() => ContentPlanSchema.parse(unknownAsset)).toThrow(
       /unknown catalog asset/i,
     );
 
-    const falselyOwned = structuredClone(RISE_CONTENT_PLAN);
-    const mapEntry = falselyOwned.entries.find(
+    const confirmedOwned = structuredClone(RISE_CONTENT_PLAN);
+    const mapEntry = confirmedOwned.entries.find(
       entry => entry.id === 'w02-mapatrhu-context',
     );
     if (!mapEntry) throw new Error('Missing MapaTrhu test entry.');
     mapEntry.assetSelection.status = 'owned-preview';
-    expect(() => ContentPlanSchema.parse(falselyOwned)).toThrow(
-      /owned preview|rights|permitted platform/i,
-    );
+    expect(() => ContentPlanSchema.parse(confirmedOwned)).not.toThrow();
 
     const incompatibleProject = structuredClone(RISE_CONTENT_PLAN);
     const incompatibleEntry = incompatibleProject.entries.find(
@@ -163,6 +161,41 @@ describe('content plan contracts', () => {
     expect(() => ContentPlanSchema.parse(protectedAsset)).toThrow(
       /owned preview|confidentiality|redaction|permitted platform/i,
     );
+  });
+
+  test('locks the first four weeks to deterministic Rise-owned product evidence', () => {
+    const expected = new Map([
+      [
+        'w01-accountable-team',
+        [
+          'rise-home',
+          'mapatrhu-map',
+          'grantai-ui',
+          'mojafirma-document-flow',
+        ],
+      ],
+      ['w02-mapatrhu-context', ['mapatrhu-map']],
+      ['w03-rise-growth-system', ['rise-home']],
+      ['w04-grantai-decision', ['grantai-ui']],
+    ]);
+    const catalog = new Map<string, string>(
+      RISE_PUBLIC_ASSET_CATALOG_V1.assets.map(asset => [
+        asset[0],
+        asset[4],
+      ]),
+    );
+
+    for (const [entryId, assetIds] of expected) {
+      const entry = RISE_CONTENT_PLAN.entries.find(item => item.id === entryId);
+      expect(entry?.assetSelection.status).toBe('owned-preview');
+      expect(entry?.assetSelection.assetIds).toEqual(assetIds);
+      expect(
+        assetIds.every(id => catalog.get(id) !== 'generated-illustration'),
+      ).toBe(true);
+      expect(entry?.specificVisualBrief).toMatch(
+        /reáln|determinist|bez generatív/i,
+      );
+    }
   });
 
   test('keeps a human video capture-gated without an approved recording', () => {

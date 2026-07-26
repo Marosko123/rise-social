@@ -1,23 +1,5 @@
-import { ReviewStudio } from '@/components/ReviewStudio';
-import {
-  ensureDemoRun,
-  getRunRepository,
-  isPublishingConfigured,
-} from '@/server/repository';
+import { ChatGptHandoff } from '@/components/ChatGptHandoff';
 
-export const dynamic = 'force-dynamic';
-
-export default async function HomePage({
-  searchParams,
-}: {
-  searchParams: Promise<{ run?: string }>;
-}) {
-  const selectedId = (await searchParams).run;
-  const selected = selectedId ? getRunRepository().get(selectedId) : undefined;
-  return (
-    <ReviewStudio
-      initialRun={selected ?? ensureDemoRun()}
-      publishingReady={isPublishingConfigured()}
-    />
-  );
+export default function ChatGptHandoffPage() {
+  return <ChatGptHandoff />;
 }

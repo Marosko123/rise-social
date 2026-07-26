@@ -81,12 +81,12 @@ type PreRenderInput = {
 
 const countWords = (value: string) => value.trim().split(/\s+/u).filter(Boolean).length;
 const countLines = (value: string) => value.split(/\r?\n/u).filter(line => line.trim()).length;
-const BANNED_GENERATIVE_SUBJECTS = /\b(person|people|portrait|face|human|logo|wordmark|text|typography|ui|interface|dashboard|metric|chart|graph|človek|človeka|ľudia|ľudí|tvár|tvare|osoba|osoby|logo|značka|text|písmo|rozhranie|obrazovka|dashboard|panel|metrika|metriky|graf|grafom|grafy|tabuľka|tabuľky)\b/iu;
+const BANNED_GENERATIVE_SUBJECTS = /\b(person|people|portrait|face|human|logo|wordmark|text|typography|ui|interface|dashboard|metric|chart|graph|robot|android|house|houses|apartment|apartments|construction|realty|cyberpunk|neon|blue-purple|real estate(?: stock)?|housing stock|človek|človeka|ľudia|ľudí|tvár|tvare|osoba|osoby|logo|značka|text|písmo|rozhranie|obrazovka|dashboard|panel|metrika|metriky|graf|grafom|grafy|tabuľka|tabuľky|robot|dom|domy|domov|byt|byty|bytov|stavebn\w*|developersk\w*|rezidenčn\w*|realitn\w*|cyberpunk|neón|modro-fialov\w*)\b/iu;
 
 function generativeSubjectIsBlocked(prompt: string): boolean {
   // “no text” / “bez textu” is a guardrail, not a request to render text.
   const subjectOnly = prompt.replace(
-    /\b(?:no|without|bez)\s+(?:person|people|portrait|face|human|logo|wordmark|text|typography|ui|interface|dashboard|metric|chart|graph)(?:u|ov|y|a|e)?\b/giu,
+    /\b(?:no|without|bez|žiadne|žiadny|žiadnu)\s+(?:person|people|portrait|face|human|logo|wordmark|text|typography|ui|interface|dashboard|metric|chart|graph|robot|house|houses|apartment|apartments|construction|realty|cyberpunk|neon|real estate(?: stock)?|housing stock|človek|ľudia|tvár|osoba|značka|písmo|rozhranie|obrazovka|panel|metrika|graf|tabuľka|dom|domy|byt|byty|stavebn\w*|developersk\w*|rezidenčn\w*|realitn\w*|neón|modro-fialov\w*)(?:u|ov|y|a|e)?\b/giu,
     '',
   );
   return BANNED_GENERATIVE_SUBJECTS.test(subjectOnly);

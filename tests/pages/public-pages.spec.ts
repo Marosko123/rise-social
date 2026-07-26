@@ -7,7 +7,7 @@ const PUBLIC_ORIGIN = 'https://marosko123.github.io';
 const BASE_PATH = '/rise-social';
 
 test.describe('GitHub Pages public presentation', () => {
-  test('serves the canonical content plan at root and /content-plan/', async ({
+  test('serves the ChatGPT-first root and keeps the content plan at /content-plan/', async ({
     page,
   }) => {
     const failedResponses: string[] = [];
@@ -17,18 +17,33 @@ test.describe('GitHub Pages public presentation', () => {
       }
     });
 
-    for (const path of [`${BASE_PATH}/`, `${BASE_PATH}/content-plan/`]) {
-      await page.goto(path);
-      await expect(
-        page.getByRole('heading', { name: '90-dňový content plán' }),
-      ).toBeVisible();
-      await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
-        'href',
-        path === `${BASE_PATH}/`
-          ? `${PUBLIC_ORIGIN}${BASE_PATH}/`
-          : `${PUBLIC_ORIGIN}${BASE_PATH}/content-plan/`,
-      );
-    }
+    await page.goto(`${BASE_PATH}/`);
+    await expect(
+      page.getByRole('heading', {
+        name: 'Rise.sk je softvérová a produktová firma.',
+      }),
+    ).toBeVisible();
+    await expect(page.locator('.handoff-critical')).toContainText(
+      'Nie sme stavebná firma',
+    );
+    await expect(page.locator('.handoff-critical')).toContainText(
+      'MapaTrhu je dátový softvérový produkt',
+    );
+    await expect(page.locator('.handoff-brand svg')).toBeVisible();
+    await expect(page.getByText('Žiadne AI a realitné klišé.')).toBeVisible();
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+      'href',
+      `${PUBLIC_ORIGIN}${BASE_PATH}/`,
+    );
+
+    await page.goto(`${BASE_PATH}/content-plan/`);
+    await expect(
+      page.getByRole('heading', { name: '90-dňový content plán' }),
+    ).toBeVisible();
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+      'href',
+      `${PUBLIC_ORIGIN}${BASE_PATH}/content-plan/`,
+    );
 
     expect(failedResponses).toEqual([]);
   });
@@ -215,6 +230,31 @@ test.describe('GitHub Pages public presentation', () => {
         asset.previewUrl.startsWith('https://rise.sk/portfolio/'),
       ),
     ).toBe(true);
+
+    const contextResponse = await request.get(
+      `${PAGES_ORIGIN}${BASE_PATH}/chatgpt-context.json`,
+    );
+    expect(contextResponse.status()).toBe(200);
+    const context = await contextResponse.json();
+    expect(context.schemaVersion).toBe('2.0');
+    expect(context.identity.category).toBe('software-and-product-company');
+    expect(context.products).toHaveLength(4);
+
+    const contextMarkdownResponse = await request.get(
+      `${PAGES_ORIGIN}${BASE_PATH}/chatgpt-context.md`,
+    );
+    expect(contextMarkdownResponse.status()).toBe(200);
+    expect(await contextMarkdownResponse.text()).toContain(
+      'NIE JE stavebná firma',
+    );
+
+    const starterPackResponse = await request.get(
+      `${PAGES_ORIGIN}${BASE_PATH}/starter-pack.json`,
+    );
+    expect(starterPackResponse.status()).toBe(200);
+    const starterPack = await starterPackResponse.json();
+    expect(starterPack.status).toBe('awaiting-human-approval');
+    expect(starterPack.packs).toEqual([]);
 
     expect(failedResponses).toEqual([]);
   });

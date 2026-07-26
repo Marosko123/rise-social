@@ -13,11 +13,11 @@ const PUBLIC_URL = `${PUBLIC_ORIGIN}${PUBLIC_PATH}/`;
 export const metadata: Metadata = {
   metadataBase: new URL(PUBLIC_ORIGIN),
   title: {
-    default: 'Rise Social Studio — 90-dňový content plán',
+    default: 'Rise.sk — ChatGPT brand context',
     template: '%s | Rise Social Studio',
   },
   description:
-    'Verejná read-only prezentácia 90-dňového content plánu a kontrolného workflowu Rise.sk.',
+    'Kanonický verejný kontext pre konzistentné Rise.sk sociálne vizuály: softvérová identita, produkty, brand lock, assety a approval hranice.',
   alternates: {
     canonical: PUBLIC_URL,
   },
@@ -25,9 +25,9 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'sk_SK',
     siteName: 'Rise Social Studio',
-    title: 'Rise Social Studio — 90-dňový content plán',
+    title: 'Rise.sk — ChatGPT brand context',
     description:
-      'Profesionálny plán značky, projektových dôkazov, vzdelávania a human-gated AI workflowu Rise.sk.',
+      'Najprv softvérová identita a brand lock. Potom reálne produktové dôkazy a human-gated výstupy.',
     url: PUBLIC_URL,
     images: [
       {
