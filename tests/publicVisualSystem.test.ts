@@ -48,6 +48,14 @@ describe('ChatGPT-ready public Rise visual system', () => {
     expect(PUBLIC_VISUAL_PLAYBOOK.canonicalUrl).toBe(
       'https://marosko123.github.io/rise-social/visual-playbook.json',
     );
+    expect(PUBLIC_VISUAL_PLAYBOOK).toMatchObject({
+      instagramCarouselPlaybookUrl:
+        'https://marosko123.github.io/rise-social/instagram-carousel-playbook.json',
+      brandAssetManifestUrl:
+        'https://marosko123.github.io/rise-social/brand-assets.json',
+      brandCopyUrl:
+        'https://marosko123.github.io/rise-social/brand-copy.json',
+    });
     expect(PUBLIC_VISUAL_PLAYBOOK.playbook.chatGptWorkflow.steps).toEqual([
       'brand-context',
       'asset-librarian',

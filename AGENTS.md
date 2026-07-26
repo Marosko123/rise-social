@@ -21,8 +21,14 @@ only approved content packs. SQLite owns drafts and temporary receipts.
 - Before any image prompt, read `brand/visual-generation-playbook.v1.ts`, open the
   exact public Rise case study and bind approved asset IDs; generated output may
   only be a separate abstract/editorial layer.
+- For an application carousel, also read
+  `brand/instagram-carousel-playbook.v1.ts`, `/brand-copy.json` and
+  `/brand-assets.json`; use `app-case-study`, exact Rise logo hashes and no
+  `reference-only` screenshot in a render.
 - In public ChatGPT context, bootstrap from `/visual-playbook.json` and
-  `/visual-assets.json`. A direct “vytvor/generuj obrázok” approves only that
+  `/visual-assets.json`; carousel work also loads
+  `/instagram-carousel-playbook.json`, `/brand-copy.json` and
+  `/brand-assets.json`. A direct “vytvor/generuj obrázok” approves only that
   generation request; a topic alone stops at art directions.
 - Write concrete Slovak in a direct, calm, polite and friendly company voice.
 - Route every variant through `rise-linkedin-post`, `rise-instagram-post` or

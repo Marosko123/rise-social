@@ -32,9 +32,11 @@
     "check:content": "node scripts/check-content-contract.mjs",
     "check:lfs": "node scripts/check-lfs-budget.mjs",
     "check:public": "tsx scripts/check-public.ts",
+    "sync:rise-canonical": "tsx scripts/sync-rise-canonical.ts --write",
+    "check:rise-canonical": "tsx scripts/sync-rise-canonical.ts",
     "audit:ci": "npm audit --audit-level=high",
-    "verify": "npm run test && npm run lint && npm run typecheck && npm run check:agentic && npm run check:content && npm run build",
-    "verify:push": "npm run verify && npm run audit:ci",
+    "verify": "npm run test && npm run lint && npm run typecheck && npm run check:agentic && npm run check:content && npm run check:rise-canonical && npm run build",
+    "verify:push": "npm run verify && npm run check:lfs && npm run audit:ci",
     "verify:pages": "npm run verify:push && npm run test:e2e && npm run check:public && npm run build:pages && npm run check:public && npm run test:pages",
     "hooks:install": "git config core.hooksPath .githooks",
     "rise-social": "tsx src/cli.ts"

@@ -45,6 +45,11 @@ describe('GitHub workflow supply-chain baseline', () => {
     expect(workflow).toContain('fetch "visual-playbook/"');
     expect(workflow).toContain('fetch "visual-playbook.json"');
     expect(workflow).toContain('fetch "visual-playbook.md"');
+    expect(workflow).toContain('fetch "instagram-carousel-playbook/"');
+    expect(workflow).toContain('fetch "instagram-carousel-playbook.json"');
+    expect(workflow).toContain('fetch "instagram-carousel-playbook.md"');
+    expect(workflow).toContain('fetch "brand-assets.json"');
+    expect(workflow).toContain('fetch "brand-copy.json"');
     expect(workflow).toContain('fetch "visual-assets.json"');
   });
 });

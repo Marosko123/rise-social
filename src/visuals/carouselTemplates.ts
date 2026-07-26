@@ -1,11 +1,30 @@
-import type { Theme } from '@/domain/schemas';
+import type { CarouselSlideRole, Theme } from '@/domain/schemas';
 
-export type CarouselTemplateId = 'product-anatomy' | 'decision-note' | 'before-after' | 'signal-noise';
-export type VisualLayout = 'image-detail' | 'diagram' | 'calm-text' | 'full-bleed' | 'split-detail';
+export type CarouselTemplateId =
+  | 'product-anatomy'
+  | 'decision-note'
+  | 'before-after'
+  | 'signal-noise'
+  | 'app-case-study';
+export type VisualLayout =
+  | 'image-detail'
+  | 'diagram'
+  | 'calm-text'
+  | 'full-bleed'
+  | 'split-detail'
+  | 'app-hero'
+  | 'app-flow'
+  | 'ui-focus'
+  | 'proof';
 
 export type CarouselTemplate = {
   id: CarouselTemplateId;
-  slides: ReadonlyArray<{ narrative: string; layout: VisualLayout }>;
+  allowedSlideCounts?: readonly number[];
+  slides: ReadonlyArray<{
+    narrative: string;
+    layout: VisualLayout;
+    role?: CarouselSlideRole;
+  }>;
 };
 
 export const CAROUSEL_TEMPLATES: Record<CarouselTemplateId, CarouselTemplate> = {
@@ -52,6 +71,47 @@ export const CAROUSEL_TEMPLATES: Record<CarouselTemplateId, CarouselTemplate> = 
       { narrative: 'Čo je iba marketingový naratív.', layout: 'split-detail' },
       { narrative: 'Dopad na firmu.', layout: 'image-detail' },
       { narrative: 'Odporúčanie a dátum kontroly zdrojov.', layout: 'calm-text' },
+    ],
+  },
+  'app-case-study': {
+    id: 'app-case-study',
+    allowedSlideCounts: [6, 7],
+    slides: [
+      {
+        narrative: 'Čo aplikácia zjednodušuje.',
+        layout: 'app-hero',
+        role: 'cover',
+      },
+      {
+        narrative: 'Jedna konkrétna situácia používateľa alebo firmy.',
+        layout: 'calm-text',
+        role: 'problem',
+      },
+      {
+        narrative: 'Čo Rise navrhlo, vyvinulo alebo prepojilo.',
+        layout: 'split-detail',
+        role: 'scope',
+      },
+      {
+        narrative: 'Kľúčový tok v troch až piatich krokoch.',
+        layout: 'app-flow',
+        role: 'flow',
+      },
+      {
+        narrative: 'Reálny UI detail s najviac troma calloutmi.',
+        layout: 'ui-focus',
+        role: 'ui-detail',
+      },
+      {
+        narrative: 'Dôležité UX, integračné, dátové alebo technické rozhodnutie.',
+        layout: 'diagram',
+        role: 'decision',
+      },
+      {
+        narrative: 'Verejne overiteľný dôkaz, stav alebo dodaný rozsah a ďalší krok.',
+        layout: 'proof',
+        role: 'evidence',
+      },
     ],
   },
 };

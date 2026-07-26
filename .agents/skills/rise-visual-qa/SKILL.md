@@ -13,13 +13,15 @@ Rendered PNG/PDF/video preview, visual direction, selected assets, provenance, a
 
 ## Workflow
 
-1. Read `brand/visual-generation-playbook.v1.ts`; validate its version, mandatory
+1. Read `brand/visual-generation-playbook.v1.ts`; for `app-case-study` also read
+   `brand/instagram-carousel-playbook.v1.ts`; validate versions, mandatory
    source URLs, exact palette signals, negative prompt and complete prompt
    contract in provenance.
-2. Check 1080×1350 output, 84 px safe margin, slide number, title lines, overflow,
-   WCAG AA contrast and text density.
+2. Check 1080×1350 output, 84 px safe margin, 6–7 roles, slide number,
+   headline/body/callout limits, claim IDs, overflow, WCAG AA contrast and text density.
 3. Inspect the full carousel, Instagram 3×3, mobile feed and Facebook/LinkedIn crops.
-4. Compare UI/logo/diagram pixel-for-pixel with the approved asset; inspect AI
+4. Compare UI/logo/diagram pixel-for-pixel and verify the exact manifest hash;
+   confirm Inter and Playfair loaded with no fallback. Inspect AI
    output at 100% for nonsense text, distorted objects, fake data, glossy/cyberpunk
    drift, implausible light and broken contact shadows.
 5. Return blockers before approval; video needs captions and a clear silent first frame.
@@ -32,10 +34,13 @@ Pass/fail report with asset IDs, crop, findings, alt-text result and required hu
 
 ## Stop conditions
 
-Stop on missing source manifest or playbook version, unreadable type, unsafe crop,
-absent alt text, changed logo/UI, rights gap, generated person/text/chart, brand
-drift or uninspected video captions.
+Stop on missing source manifest/playbook version, wrong `app-case-study` role
+order, unreadable or fallback type, unsafe crop, absent alt text/claim ID,
+changed logo/UI, perspective transform, rights gap, generated person/text/chart,
+brand drift or uninspected video captions.
 
 ## Pressure test
 
-Good: a legible 1080×1350 diagram with 84 px margins passes pending human inspection. Bad: altered UI or AI gibberish blocks approval.
+Good: a legible `app-case-study` with exact Rise mark, real product whole,
+functional detail and 84 px margins passes pending human inspection. Bad:
+altered UI, fallback font or AI gibberish blocks approval.

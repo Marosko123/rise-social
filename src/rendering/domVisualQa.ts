@@ -2,6 +2,7 @@ import type { Page } from 'playwright-core';
 
 export type DomSlideMetric = {
   slide: number;
+  template?: string;
   clientWidth: number;
   clientHeight: number;
   scrollWidth: number;
@@ -32,6 +33,13 @@ export function findDomVisualQaFindings(metrics: readonly DomSlideMetric[]): str
     if (slide.slide === 1 && slide.headlineLineCount > 2) {
       findings.add('cover-line-count');
     }
+    if (
+      slide.template === 'app-case-study' &&
+      slide.slide > 1 &&
+      slide.headlineLineCount > 3
+    ) {
+      findings.add('content-line-count');
+    }
     for (const element of slide.elements) {
       if (
         element.clientWidth > 0 &&
@@ -39,6 +47,9 @@ export function findDomVisualQaFindings(metrics: readonly DomSlideMetric[]): str
         (element.scrollWidth > element.clientWidth + 8 || element.scrollHeight > element.clientHeight + 8)
       ) {
         findings.add('element-overflow');
+        findings.add(
+          `element-overflow:slide-${slide.slide}:${element.selector}:${element.scrollWidth}x${element.scrollHeight}>${element.clientWidth}x${element.clientHeight}`,
+        );
       }
       if (
         element.clientWidth > 0 &&
@@ -46,6 +57,9 @@ export function findDomVisualQaFindings(metrics: readonly DomSlideMetric[]): str
         (element.left < 84 || element.right > 996 || element.top < 84 || element.bottom > 1266)
       ) {
         findings.add('safe-zone-overflow');
+        findings.add(
+          `safe-zone-overflow:slide-${slide.slide}:${element.selector}`,
+        );
       }
     }
   }
@@ -61,6 +75,7 @@ export async function evaluateDomVisualQa(page: Page): Promise<string[]> {
       if (headline) range.selectNodeContents(headline);
       return {
         slide: index + 1,
+        template: (slide as HTMLElement).dataset.template,
         clientWidth: slide.clientWidth,
         clientHeight: slide.clientHeight,
         scrollWidth: slide.scrollWidth,
@@ -70,7 +85,11 @@ export async function evaluateDomVisualQa(page: Page): Promise<string[]> {
           const box = element.getBoundingClientRect();
           const slideBox = slide.getBoundingClientRect();
           return {
-            selector: element.tagName.toLowerCase(),
+            selector: `${element.tagName.toLowerCase()}${
+              element.className
+                ? `.${String(element.className).trim().replaceAll(/\s+/gu, '.')}`
+                : ''
+            }`,
             left: box.left - slideBox.left,
             right: box.right - slideBox.left,
             top: box.top - slideBox.top,

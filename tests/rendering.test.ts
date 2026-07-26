@@ -11,7 +11,7 @@ import { createExportBundle, type AssetRenderer } from '@/export/createExportBun
 import { createCarouselDocument } from '@/rendering/carouselDocument';
 import { resolvePostAssetsForRender } from '@/rendering/assetResolution';
 import { PlaywrightAssetRenderer } from '@/rendering/playwrightAssetRenderer';
-import type { Platform } from '@/domain/schemas';
+import { PostConceptSchema, type Platform } from '@/domain/schemas';
 
 import { createFixtureRun } from './fixtures';
 
@@ -30,6 +30,22 @@ describe('carousel document', () => {
     expect(html).toContain('&lt;script&gt;alert(&quot;no&quot;)&lt;/script&gt;');
     expect(html).not.toContain('<script>alert');
     expect(html.match(/data-slide=/g)).toHaveLength(4);
+  });
+
+  test('embeds exact approved local image bytes instead of a blocked file URL', () => {
+    const post = structuredClone(createFixtureRun().draft.posts[0]);
+    post.slides[0].imagePath = join(
+      process.cwd(),
+      'public-site',
+      'public',
+      'brand',
+      'Rise_logo_transparent.png',
+    );
+
+    const html = createCarouselDocument(post);
+
+    expect(html).toContain('data:image/png;base64,');
+    expect(html).not.toContain('file://');
   });
 
   test('renders the deterministic demo with its branded fallback and no unmanaged image path', async () => {
@@ -56,6 +72,103 @@ describe('carousel document', () => {
     const destination = mkdtempSync(join(tmpdir(), 'rise-social-content-lines-'));
 
     await expect(new PlaywrightAssetRenderer().render(post, destination, [])).resolves.toMatchObject({ postId: post.id });
+  }, 30_000);
+
+  test('renders a seven-slide app case study with two distinct approved evidence assets', async () => {
+    const publicAssetRoot = join(
+      process.cwd(),
+      'public-site',
+      'public',
+      'brand',
+    );
+    const evidence = [
+      {
+        id: 'rise-app-whole',
+        path: '/Rise_logo_transparent.png',
+        visualClass: 'product-screenshot' as const,
+      },
+      {
+        id: 'rise-app-detail',
+        path: '/Rise_logo_text_transparent.png',
+        visualClass: 'new-documentation' as const,
+      },
+    ].map(item => ({
+      ...item,
+      origin: 'rise-owned' as const,
+      owner: 'Rise.sk',
+      license: 'owned' as const,
+      project: 'Rise.sk',
+      confidentiality: 'public' as const,
+      allowedPlatforms: ['instagram', 'linkedin', 'facebook'] as Platform[],
+      redactionStatus: 'not-required' as const,
+      contentSha256: createHash('sha256')
+        .update(readFileSync(join(publicAssetRoot, item.path)))
+        .digest('hex'),
+      approved: true,
+      requiresVisualApproval: false,
+      rightsStatus: 'confirmed' as const,
+      rightsReference: 'Test fixture uses exact Rise-owned brand bytes.',
+    }));
+    const base = createFixtureRun().draft.posts[0];
+    const roles = [
+      ['cover', 'app-hero', 'Web rastie s firmou', 'Živý firemný web spája služby, projekty, obsah a kontakt.'],
+      ['problem', 'calm-text', 'Jeden jasný vstup', 'Informácie o službách a projektoch potrebovali jeden zrozumiteľný vstup.'],
+      ['scope', 'split-detail', 'Od návrhu po rozvoj', 'Navrhli sme architektúru, vizuálny systém a priebežný rozvoj webu.'],
+      ['flow', 'app-flow', 'Od potreby ku kontaktu', 'Návštevník prejde od potreby cez dôkaz k ďalšiemu kroku.'],
+      ['ui-detail', 'ui-focus', 'Čitateľná obsahová hierarchia', 'Detail ukazuje jasnú hierarchiu obsahu a cestu ku kontaktu.'],
+      ['decision', 'diagram', 'Šesť jazykov, jeden systém', 'Dôležité informácie zostávajú čitateľné naprieč šiestimi jazykmi webu.'],
+      ['evidence', 'proof', 'Živý produkt od 2025', 'Verejná case study opisuje živý produkt rozvíjaný od roku 2025.'],
+    ] as const;
+    const post = PostConceptSchema.parse({
+      ...base,
+      project: 'Rise.sk',
+      carouselTemplate: 'app-case-study',
+      slides: roles.map(([role, visualLayout, title, body], index) => ({
+        id: `rise-app-${index + 1}`,
+        eyebrow: index === 0 ? 'RISE.SK' : String(index + 1).padStart(2, '0'),
+        title,
+        body,
+        alt: `Karta ${index + 1} vysvetľuje časť verejnej case study Rise.sk.`,
+        claimIds: ['claim-modernization'],
+        role,
+        visualLayout,
+        surface: index === 4 ? 'media' : 'canvas',
+        ...(index === 0 || index === 4
+          ? {
+              assetId: evidence[index === 0 ? 0 : 1].id,
+              imagePath: evidence[index === 0 ? 0 : 1].path,
+              assetFit: 'contain',
+              crop: {
+                aspectRatio: '4:5',
+                focalPoint: { x: 50, y: 50 },
+                preserve: 'Zachovať celý originálny Rise asset.',
+              },
+              ...(index === 4
+                ? {
+                    callouts: [
+                      {
+                        label: 'Jasná hierarchia',
+                        anchor: { x: 68, y: 35 },
+                      },
+                    ],
+                  }
+                : {}),
+            }
+          : {}),
+      })),
+    });
+    const destination = mkdtempSync(
+      join(tmpdir(), 'rise-social-app-case-study-'),
+    );
+
+    const rendered = await new PlaywrightAssetRenderer({
+      publicAssetRoot,
+    }).render(post, destination, evidence);
+
+    expect(rendered.slides).toHaveLength(7);
+    expect(
+      rendered.slides.every(path => readFileSync(path).byteLength > 0),
+    ).toBe(true);
   }, 30_000);
 
   test('never resolves arbitrary local or remote image paths without a matching approved asset record', () => {

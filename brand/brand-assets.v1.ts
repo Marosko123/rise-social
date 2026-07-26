@@ -1,0 +1,126 @@
+const PUBLIC_BASE = 'https://marosko123.github.io/rise-social/brand';
+
+type BrandAsset = {
+  id: string;
+  fileName: string;
+  sha256: string;
+  mimeType: string;
+  role: string;
+  dimensions?: { width: number; height: number };
+  allowedUses: readonly string[];
+  preserve: string;
+};
+
+const assets = [
+  {
+    id: 'rise-logo-symbol-svg',
+    fileName: 'Rise_logo.svg',
+    sha256: '66f0d9e833b9f5b979db369a5b35f6bb547ad05564ec362013295eef1db67037',
+    mimeType: 'image/svg+xml',
+    role: 'Kanonický Rise symbol pre carousel header a vektorové výstupy.',
+    dimensions: { width: 512, height: 512 },
+    allowedUses: ['carousel-header', 'profile-pack', 'public-playbook'],
+    preserve: 'Zachovať presné SVG bajty, viewBox, tvary a goldGradient.',
+  },
+  {
+    id: 'rise-logo-symbol-transparent',
+    fileName: 'Rise_logo_transparent.png',
+    sha256: 'baffbe18cb7d4519fe625bf8d448843f0b93ee5b97f0e396625f0d90f8c35672',
+    mimeType: 'image/png',
+    role: 'Transparentný bitmapový Rise symbol.',
+    dimensions: { width: 1080, height: 1080 },
+    allowedUses: ['social-composite', 'preview'],
+    preserve: 'Nedeformovať, neprefarbovať a nepridávať efekt meniaci gradient.',
+  },
+  {
+    id: 'rise-logo-full-lockup',
+    fileName: 'Rise_logo_text_transparent.png',
+    sha256: '39163be3659b1444fb3a7d3caf158de15cf0d7da3d79d1bec678cdbf772ef51f',
+    mimeType: 'image/png',
+    role: 'Plný Rise lockup na transparentnom podklade.',
+    dimensions: { width: 1080, height: 1080 },
+    allowedUses: ['profile-pack', 'social-composite'],
+    preserve: 'Použiť iba ako jeden nedeliteľný originál.',
+  },
+  {
+    id: 'rise-logo-profile-circle',
+    fileName: 'Rise_logo_circle.png',
+    sha256: '8a2fb0a61bfb824d7ed2e34c640f35b0ecfa3f3c0c24bad5b64ece3e692f93a1',
+    mimeType: 'image/png',
+    role: 'Kruhový profilový variant Rise.',
+    dimensions: { width: 1080, height: 1080 },
+    allowedUses: ['profile-avatar', 'profile-pack'],
+    preserve: 'Zachovať kruhovú kompozíciu a vnútorné odsadenie.',
+  },
+  {
+    id: 'inter-regular',
+    fileName: 'Inter-Regular.woff',
+    sha256: 'f392661e28a31a00950592090657e66058c2918f89a2592637502c9f83d25a65',
+    mimeType: 'font/woff',
+    role: 'Funkčný text, body a navigácia.',
+    allowedUses: ['carousel-render', 'public-playbook'],
+    preserve: 'Nahrávať lokálne ako Inter 400 bez syntetickej váhy.',
+  },
+  {
+    id: 'inter-semibold',
+    fileName: 'Inter-SemiBold.woff',
+    sha256: 'b79b32fd5e17c45f0cd249c57f700fed6f4fbb4c03cb41b81e828feb6f37a788',
+    mimeType: 'font/woff',
+    role: 'Callouty, navigácia a zvýraznený funkčný text.',
+    allowedUses: ['carousel-render', 'public-playbook'],
+    preserve: 'Nahrávať lokálne ako Inter 600 bez syntetickej váhy.',
+  },
+  {
+    id: 'playfair-regular',
+    fileName: 'PlayfairDisplay-Regular.ttf',
+    sha256: '861f838d481d28cbbd4793e45dc02f01d04c81e06ed98ab2779ca152ace9f27b',
+    mimeType: 'font/ttf',
+    role: 'Krátky nosný titulok.',
+    allowedUses: ['carousel-render', 'public-playbook'],
+    preserve: 'Nahrávať lokálne ako Playfair Display 400.',
+  },
+  {
+    id: 'playfair-semibold',
+    fileName: 'PlayfairDisplay-SemiBold.ttf',
+    sha256: '0f8ae66ea018739838dac8fc0a70f9dd6fe8806bf4f63bb35b3c643480221d31',
+    mimeType: 'font/ttf',
+    role: 'Krátky nosný titulok so silnejšou váhou.',
+    allowedUses: ['carousel-render', 'public-playbook'],
+    preserve: 'Nahrávať lokálne ako Playfair Display 600.',
+  },
+  {
+    id: 'inter-license',
+    fileName: 'LICENSE-Inter.txt',
+    sha256: '3b0a5fca3d17942cde889069889dedbbbd075e9b599968c82a95f4d944e9b345',
+    mimeType: 'text/plain',
+    role: 'Licenčný text pre Inter.',
+    allowedUses: ['public-license'],
+    preserve: 'Zachovať presné licenčné znenie.',
+  },
+  {
+    id: 'playfair-license',
+    fileName: 'LICENSE-Playfair-Display.txt',
+    sha256: '4e6be9d19455d7cb092412984ebf3c55d26b19dd8f8452962bf432ec0a9c9dcb',
+    mimeType: 'text/plain',
+    role: 'Licenčný text pre Playfair Display.',
+    allowedUses: ['public-license'],
+    preserve: 'Zachovať presné licenčné znenie.',
+  },
+] as const satisfies readonly BrandAsset[];
+
+export const RISE_BRAND_ASSET_MANIFEST_V1 = {
+  schemaVersion: '1.0',
+  id: 'rise-brand-assets-v1',
+  checkedAt: '2026-07-26',
+  canonicalUrl:
+    'https://marosko123.github.io/rise-social/brand-assets.json',
+  source:
+    'Explicitný allowlist presných bajtov z verejného lokálneho zdrojového Rise.sk repa.',
+  policy:
+    'Tieto Rise-owned brand aktíva sú approved. Klientske screenshoty sa spravujú oddelene vo visual-assets.json a reference-only sa nikdy nekopíruje ani nerenderuje.',
+  assets: assets.map(asset => ({
+    ...asset,
+    publicUrl: `${PUBLIC_BASE}/${asset.fileName}`,
+    usageStatus: 'approved' as const,
+  })),
+} as const;

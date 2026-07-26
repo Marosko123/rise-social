@@ -11,7 +11,16 @@ export type VisualQaFinding = {
     | 'template-slide-count'
     | 'cover-title-words'
     | 'cover-title-lines'
+    | 'slide-title-words'
     | 'slide-body-words'
+    | 'slide-total-words'
+    | 'slide-callout-words'
+    | 'slide-callout-count'
+    | 'missing-claim'
+    | 'missing-slide-role'
+    | 'invalid-slide-role'
+    | 'missing-crop'
+    | 'evidence-variety'
     | 'missing-alt'
     | 'unsafe-margin'
     | 'wrong-dimensions'
@@ -52,7 +61,20 @@ type PreRenderInput = {
   strictTemplate?: boolean;
   platform?: 'instagram' | 'linkedin' | 'facebook';
   project?: string;
-  slides: Array<{ title: string; body: string; alt: string; layout?: VisualLayout; assetId?: string; imagePath?: string }>;
+  slides: Array<{
+    title: string;
+    body: string;
+    alt: string;
+    layout?: VisualLayout;
+    assetId?: string;
+    imagePath?: string;
+    role?: PostConcept['slides'][number]['role'];
+    assetFit?: PostConcept['slides'][number]['assetFit'];
+    crop?: PostConcept['slides'][number]['crop'];
+    callouts?: PostConcept['slides'][number]['callouts'];
+    surface?: PostConcept['slides'][number]['surface'];
+    claimIds?: PostConcept['slides'][number]['claimIds'];
+  }>;
   assets: readonly AssetRecord[];
   generation?: unknown;
 };
@@ -177,8 +199,16 @@ export function qaCarouselBeforeRender(input: PreRenderInput): VisualQaReport {
   const findings: VisualQaFinding[] = [];
   const humanReview = ['Skontrolovať artefakty UI, logá, predmety a zmenu klientského UI.'];
   const template = CAROUSEL_TEMPLATES[input.template];
-  if ((input.strictTemplate ?? true) && input.slides.length !== template.slides.length) {
-    findings.push({ code: 'template-slide-count', message: `Šablóna ${input.template} vyžaduje ${template.slides.length} slidov.` });
+  const allowedSlideCounts =
+    template.allowedSlideCounts ?? [template.slides.length];
+  if (
+    (input.strictTemplate ?? true) &&
+    !allowedSlideCounts.includes(input.slides.length)
+  ) {
+    findings.push({
+      code: 'template-slide-count',
+      message: `Šablóna ${input.template} vyžaduje ${allowedSlideCounts.join(' alebo ')} slidov.`,
+    });
   }
   if (countWords(input.title) > 7) {
     findings.push({ code: 'cover-title-words', message: 'Cover môže mať najviac sedem slov.', slide: 1 });
@@ -194,8 +224,70 @@ export function qaCarouselBeforeRender(input: PreRenderInput): VisualQaReport {
   }
   const layouts: VisualLayout[] = [];
   for (const [index, slide] of input.slides.entries()) {
-    if (countWords(slide.body) > 45) {
-      findings.push({ code: 'slide-body-words', message: 'Obsahový slide môže mať najviac 45 slov.', slide: index + 1 });
+    if (
+      index > 0 &&
+      (countWords(slide.title) > 7 ||
+        (input.template === 'app-case-study' &&
+          countWords(slide.title) < 2))
+    ) {
+      findings.push({
+        code: 'slide-title-words',
+        message:
+          'Obsahový titulok App Case Study musí mať dve až sedem slov.',
+        slide: index + 1,
+      });
+    }
+    const bodyWords = countWords(slide.body);
+    const bodyOutsideLimit =
+      bodyWords > 24 ||
+      (input.template === 'app-case-study' &&
+        (index === 0
+          ? bodyWords < 8 || bodyWords > 16
+          : bodyWords < 8));
+    if (bodyOutsideLimit) {
+      findings.push({
+        code: 'slide-body-words',
+        message:
+          index === 0 && input.template === 'app-case-study'
+            ? 'Cover subtitle musí mať osem až šestnásť slov.'
+            : 'Obsahový text App Case Study musí mať osem až 24 slov.',
+        slide: index + 1,
+      });
+    }
+    const calloutWords = (slide.callouts ?? []).reduce(
+      (sum, callout) => sum + countWords(callout.label),
+      0,
+    );
+    if (
+      (slide.callouts ?? []).some(callout => {
+        const words = countWords(callout.label);
+        return words < 2 || words > 4;
+      })
+    ) {
+      findings.push({
+        code: 'slide-callout-words',
+        message: 'Callout musí mať dve až štyri slová.',
+        slide: index + 1,
+      });
+    }
+    if ((slide.callouts ?? []).length > 3) {
+      findings.push({
+        code: 'slide-callout-count',
+        message: 'Slide môže mať najviac tri callouty.',
+        slide: index + 1,
+      });
+    }
+    if (
+      countWords(slide.title) +
+        countWords(slide.body) +
+        calloutWords >
+      30
+    ) {
+      findings.push({
+        code: 'slide-total-words',
+        message: 'Slide môže mať spolu najviac 30 slov.',
+        slide: index + 1,
+      });
     }
     if (!slide.alt.trim()) {
       findings.push({ code: 'missing-alt', message: 'Každý slide musí mať zmysluplný alt text.', slide: index + 1 });
@@ -211,6 +303,14 @@ export function qaCarouselBeforeRender(input: PreRenderInput): VisualQaReport {
       } else if (asset.path !== slide.imagePath) {
         findings.push({ code: 'asset-path-mismatch', message: `Slide path nezodpovedá evidovanému assetu ${asset.id}.`, slide: index + 1 });
       }
+    }
+    if (slide.assetId && (!slide.crop || !slide.assetFit)) {
+      findings.push({
+        code: 'missing-crop',
+        message:
+          'Produktový asset vyžaduje explicitný 4:5 crop, focal point, preserve pravidlo a spôsob vloženia.',
+        slide: index + 1,
+      });
     }
   }
   if (layouts.length >= 3 && new Set(layouts).size === 1) {
@@ -234,6 +334,76 @@ export function qaCarouselBeforeRender(input: PreRenderInput): VisualQaReport {
     }
     if (!asset.approved || asset.requiresVisualApproval) {
       findings.push({ code: 'asset-approval', message: `Asset ${asset.id} čaká na vizuálne schválenie.` });
+    }
+  }
+  if (input.template === 'app-case-study') {
+    const roles = input.slides.map(slide => slide.role);
+    const expectedRoles = [
+      'cover',
+      'problem',
+      'scope',
+      'flow',
+      'ui-detail',
+      ...(input.slides.length === 7 ? (['decision'] as const) : []),
+      'evidence' as const,
+    ] as const;
+    if (roles.some(role => !role)) {
+      findings.push({
+        code: 'missing-slide-role',
+        message: 'Každý app-case-study slide musí mať explicitnú naratívnu rolu.',
+      });
+    }
+    if (
+      roles.length !== expectedRoles.length ||
+      roles.some((role, index) => role !== expectedRoles[index])
+    ) {
+      findings.push({
+        code: 'invalid-slide-role',
+        message:
+          'App case study musí viesť od coveru cez problém, rozsah, tok a UI detail k overiteľnému dôkazu; sedem slidov zahŕňa aj rozhodnutie.',
+      });
+    }
+    for (const [index, slide] of input.slides.entries()) {
+      if (!slide.claimIds?.length) {
+        findings.push({
+          code: 'missing-claim',
+          message:
+            'Každý App Case Study slide musí mať aspoň jeden platný claim ID.',
+          slide: index + 1,
+        });
+      }
+    }
+    const coverWords = countWords(input.slides[0]?.title ?? '');
+    if (coverWords < 3 || coverWords > 7) {
+      findings.push({
+        code: 'cover-title-words',
+        message: 'App Case Study cover musí mať tri až sedem slov.',
+        slide: 1,
+      });
+    }
+    const referencedAssetIds = new Set(
+      input.slides.flatMap(slide => (slide.assetId ? [slide.assetId] : [])),
+    );
+    const referencedClasses = new Set(
+      input.assets
+        .filter(asset => referencedAssetIds.has(asset.id))
+        .map(asset => asset.visualClass),
+    );
+    if (referencedAssetIds.size < 2 || referencedClasses.size < 2) {
+      findings.push({
+        code: 'evidence-variety',
+        message:
+          'App case study potrebuje aspoň dva schválené assety a dva druhy produktového dôkazu.',
+      });
+    }
+    const cover = input.slides.find(slide => slide.role === 'cover');
+    const uiDetail = input.slides.find(slide => slide.role === 'ui-detail');
+    if (!cover?.assetId || !uiDetail?.assetId) {
+      findings.push({
+        code: 'evidence-variety',
+        message:
+          'App Case Study musí použiť schválený reálny produktový asset na coveri aj samostatný asset pre UI detail.',
+      });
     }
   }
   if (input.generation) findings.push(...assessGenerationRecipe(input.generation).findings);
@@ -264,7 +434,20 @@ export function qaPostBeforeRender(post: PostConcept, assets: readonly AssetReco
     title: post.slides[0]?.title ?? post.title,
     dimensions: { width: 1080, height: 1350 },
     strictTemplate: Boolean(post.carouselTemplate),
-    slides: post.slides.map(slide => ({ title: slide.title, body: slide.body, alt: slide.alt, layout: slide.visualLayout, assetId: slide.assetId, imagePath: slide.imagePath })),
+    slides: post.slides.map(slide => ({
+      title: slide.title,
+      body: slide.body,
+      alt: slide.alt,
+      layout: slide.visualLayout,
+      assetId: slide.assetId,
+      imagePath: slide.imagePath,
+      role: slide.role,
+      assetFit: slide.assetFit,
+      crop: slide.crop,
+      callouts: slide.callouts,
+      surface: slide.surface,
+      claimIds: slide.claimIds,
+    })),
     assets: selectedAssets,
   });
   return report([...base.findings, ...assetFindings], base.humanReview);

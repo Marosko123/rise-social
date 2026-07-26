@@ -124,6 +124,12 @@ jobs:
           fetch "visual-playbook.json" visual-playbook.json
           fetch "visual-playbook.md" visual-playbook.md
           fetch "visual-assets.json" visual-assets.json
+          fetch "instagram-carousel-playbook/" instagram-carousel-playbook.html
+          fetch "instagram-carousel-playbook.json" instagram-carousel-playbook.json
+          fetch "instagram-carousel-playbook.md" instagram-carousel-playbook.md
+          fetch "brand-assets.json" brand-assets.json
+          fetch "brand-copy.json" brand-copy.json
+          fetch "brand/Rise_logo.svg" Rise_logo.svg
           grep -F "90-dňový content plán" "$smoke_dir/root.html"
           grep -F "90-dňový content plán" "$smoke_dir/content-plan.html"
           grep -F "nič nie je publikované" "$smoke_dir/review.html"
@@ -135,3 +141,9 @@ jobs:
           grep -F "# Rise Visual System" "$smoke_dir/visual-playbook.md"
           grep -F "\"projects\"" "$smoke_dir/visual-assets.json"
           grep -F "\"assets\"" "$smoke_dir/visual-assets.json"
+          grep -F "Aplikácia ako krátky produktový príbeh" "$smoke_dir/instagram-carousel-playbook.html"
+          grep -F "rise-instagram-app-carousel-v1" "$smoke_dir/instagram-carousel-playbook.json"
+          grep -F "# Rise Instagram App Carousel" "$smoke_dir/instagram-carousel-playbook.md"
+          grep -F "rise-brand-assets-v1" "$smoke_dir/brand-assets.json"
+          grep -F "rise-brand-copy-sk-v1" "$smoke_dir/brand-copy.json"
+          grep -F "goldGradient" "$smoke_dir/Rise_logo.svg"

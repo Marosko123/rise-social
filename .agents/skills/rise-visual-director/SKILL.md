@@ -13,9 +13,11 @@ Editorial brief, campaign decision, claim ledger, selected asset records and pla
 
 ## Workflow
 
-1. Read `brand/visual-generation-playbook.v1.ts` and open the exact public Rise
-   project page plus approved asset records.
-2. Offer two or three directions using Product Anatomy, Decision Note, Before/After or Signal vs. Noise.
+1. Read `brand/visual-generation-playbook.v1.ts`; for an application also read
+   `brand/instagram-carousel-playbook.v1.ts`, canonical brand copy/assets and the
+   exact public Rise project page plus approved asset records.
+2. Offer two or three directions using `app-case-study`, Product Anatomy,
+   Decision Note, Before/After or Signal vs. Noise.
 3. Specify narrative, layout, assets, reference roles, crop, 84 px safe zones, alt text intent and any redaction.
 4. Lock mood, composition, materials, lighting and palette. Use Rise canvas
    `#080807`, gold `#DAB549`, Playfair only for short headlines and Inter for utility text.
@@ -30,8 +32,11 @@ Editorial brief, campaign decision, claim ledger, selected asset records and pla
 
 ## Stop conditions
 
-Stop on a mockup-only sequence, a slide with more than 45 words, fake UI/chart, no evidence variety, or an unapproved generative concept.
+Stop on a mockup-only sequence, more than 30 words on an app slide, missing
+claim ID, fake UI/chart, no evidence variety, `reference-only` media, changed
+original logo/font or an unapproved generative concept.
 
 ## Pressure test
 
-Good: real flow, detail, diagram and calm text form one carousel. Bad: six laptop mockups or a glowing robot are rejected as visual noise.
+Good: `app-case-study` uses a real product whole, separate UI detail, flow,
+decision and proof. Bad: six laptop mockups or a glowing robot are rejected.

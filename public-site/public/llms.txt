@@ -9,12 +9,19 @@
 - Kompletný strojový kontrakt: https://marosko123.github.io/rise-social/visual-playbook.json
 - Kompaktný LLM dokument: https://marosko123.github.io/rise-social/visual-playbook.md
 - Bezpečný katalóg projektov a obrázkov: https://marosko123.github.io/rise-social/visual-assets.json
+- Instagram App Carousel príručka: https://marosko123.github.io/rise-social/instagram-carousel-playbook/
+- Instagram Carousel strojový kontrakt: https://marosko123.github.io/rise-social/instagram-carousel-playbook.json
+- Instagram Carousel LLM dokument: https://marosko123.github.io/rise-social/instagram-carousel-playbook.md
+- Originálne Rise logá a fonty: https://marosko123.github.io/rise-social/brand-assets.json
+- Kanonické slovenské texty: https://marosko123.github.io/rise-social/brand-copy.json
 - Portfólio Rise.sk: https://rise.sk/portfolio
 
 Verejná verzia neobsahuje SQLite drafty, API, AI runner, schvaľovanie, export,
 Buffer, plánovanie ani publikovanie. Všetky faktické tvrdenia sa majú overovať
 vo verejných zdrojoch uvedených priamo pri obsahu.
 
-Pri tvorbe vizuálu načítaj playbook aj asset manifest. Téma bez priameho
+Pri carouseli o aplikácii načítaj v poradí vizuálny playbook, brand-copy,
+brand-assets, instagram-carousel-playbook, visual-assets a presnú Rise case
+study. Pri tvorbe iného vizuálu načítaj playbook aj asset manifest. Téma bez priameho
 „vytvor/generuj obrázok“ pripraví iba art direction. Model nesmie vymyslieť
 klientske UI, ľudí, logo, text, metriky ani grafy.

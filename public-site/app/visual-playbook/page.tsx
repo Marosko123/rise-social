@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 
 import { VisualPlaybook } from '@/components/VisualPlaybook';
@@ -26,7 +27,14 @@ export default function PublicVisualPlaybookPage() {
     <main className="content-plan-shell visual-playbook-page">
       <header className="plan-topbar">
         <Link className="brand" href="/" aria-label="Rise Social Studio">
-          <span className="brand-mark">R</span>
+          <Image
+            className="official-brand-mark"
+            src="/rise-social/brand/Rise_logo.svg"
+            alt=""
+            width={42}
+            height={42}
+            unoptimized
+          />
           <span>
             <strong>Rise Visual System</strong>
             <small>ChatGPT-ready</small>
@@ -42,7 +50,14 @@ export default function PublicVisualPlaybookPage() {
 
       <footer className="plan-footer">
         <div>
-          <span className="brand-mark">R</span>
+          <Image
+            className="official-brand-mark"
+            src="/rise-social/brand/Rise_logo.svg"
+            alt=""
+            width={42}
+            height={42}
+            unoptimized
+          />
           <p>
             <strong>Vizuálny playbook nie je publikačné schválenie.</strong>
             Reálny výstup stále prechádza právami, vizuálnou QA a ľudskou
@@ -53,6 +68,7 @@ export default function PublicVisualPlaybookPage() {
           <a href="../visual-playbook.json">JSON kontrakt</a>
           <a href="../visual-playbook.md">LLM dokument</a>
           <a href="../visual-assets.json">Asset manifest</a>
+          <a href="../instagram-carousel-playbook/">Carousel playbook</a>
         </div>
       </footer>
     </main>

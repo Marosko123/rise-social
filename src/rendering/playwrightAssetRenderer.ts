@@ -35,6 +35,18 @@ export class PlaywrightAssetRenderer implements AssetRenderer {
     try {
       const page = await browser.newPage({ viewport: { width: 1080, height: 1350 } });
       await page.setContent(createCarouselDocument(postForRender), { waitUntil: 'load' });
+      const fontsLoaded = await page.evaluate(async () => {
+        await document.fonts.ready;
+        return {
+          inter: document.fonts.check('400 34px Inter'),
+          playfair: document.fonts.check('400 60px "Playfair Display"'),
+        };
+      });
+      if (!fontsLoaded.inter || !fontsLoaded.playfair) {
+        throw new Error(
+          `Font gate failed: Inter=${fontsLoaded.inter}, Playfair Display=${fontsLoaded.playfair}`,
+        );
+      }
       const domFindings = await evaluateDomVisualQa(page);
       if (domFindings.length > 0) {
         throw new Error(`DOM visual QA failed: ${domFindings.join(', ')}`);

@@ -123,4 +123,36 @@ describe('portable agentic contract', () => {
       ).toContain(playbookPath);
     }
   });
+
+  test('gives ChatGPT and carousel skills one canonical application carousel contract', () => {
+    const carouselPlaybook = 'brand/instagram-carousel-playbook.v1.ts';
+    const chatgpt = readFileSync(
+      join(root, 'CHATGPT_PROJECT_INSTRUCTIONS.md'),
+      'utf8',
+    );
+    for (const marker of [
+      carouselPlaybook,
+      'https://marosko123.github.io/rise-social/instagram-carousel-playbook.json',
+      'https://marosko123.github.io/rise-social/brand-assets.json',
+      'https://marosko123.github.io/rise-social/brand-copy.json',
+    ]) {
+      expect(chatgpt).toContain(marker);
+    }
+
+    for (const skillName of [
+      'rise-brand-context',
+      'rise-carousel',
+      'rise-asset-librarian',
+      'rise-visual-director',
+      'rise-slovak-human-copy',
+      'rise-visual-qa',
+    ]) {
+      const skill = readFileSync(
+        join(root, '.agents', 'skills', skillName, 'SKILL.md'),
+        'utf8',
+      );
+      expect(skill, skillName).toContain(carouselPlaybook);
+      expect(skill, skillName).toContain('app-case-study');
+    }
+  });
 });

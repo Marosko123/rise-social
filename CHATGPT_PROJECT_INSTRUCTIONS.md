@@ -22,8 +22,19 @@ before creating a visual:
 
 - `https://marosko123.github.io/rise-social/visual-playbook.json`
 - `https://marosko123.github.io/rise-social/visual-assets.json`
+- `https://marosko123.github.io/rise-social/brand-copy.json`
+- `https://marosko123.github.io/rise-social/brand-assets.json`
 - `https://marosko123.github.io/rise-social/content-plan/`
 - the exact `https://rise.sk/portfolio/...` case study selected by the manifest.
+
+For a professional application carousel, additionally load
+`https://marosko123.github.io/rise-social/instagram-carousel-playbook.json` and
+read `brand/instagram-carousel-playbook.v1.ts`. Use `app-case-study`: cover →
+problem → scope → flow → UI detail → optional decision → evidence. Use six
+slides only when the sourced decision is unavailable. Keep cover at 3–7 words,
+body at 8–24 words, total slide copy at 30 words and every text linked to a
+claim ID. Use only the original `rise-logo-symbol-svg` plus exact text `rise.sk`;
+verify hashes in the brand manifest and never substitute a drawn letter.
 
 For every new visual, use this chain:
 `rise-brand-context → rise-asset-librarian → rise-visual-director → rise-generative-visual → rise-visual-qa`.

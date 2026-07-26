@@ -13,8 +13,10 @@ Approved brief, public asset catalogue, intended platforms, project and proposed
 
 ## Workflow
 
-1. Read `brand/visual-generation-playbook.v1.ts`. In public ChatGPT context,
-   read `/visual-playbook.json` and `/visual-assets.json` from Rise Social Studio.
+1. Read `brand/visual-generation-playbook.v1.ts`. For `app-case-study`, also
+   read `brand/instagram-carousel-playbook.v1.ts`, `/brand-assets.json` and
+   `/brand-copy.json`. In public ChatGPT context, read `/visual-playbook.json`
+   and `/visual-assets.json` from Rise Social Studio.
 2. Open the exact public Rise case study, then match candidates to stable catalogue
    asset IDs. A portfolio thumbnail alone is not project evidence.
 3. Prefer real product UI, public Rise diagram, approved team photo, new
@@ -26,6 +28,9 @@ Approved brief, public asset catalogue, intended platforms, project and proposed
 6. Choose only renderable records; keep a rights note in the review digest.
 7. Treat `reference-only` as art-direction context and `blocked` as unusable.
    Only `approved` assets may be proposed for their listed platforms.
+8. For original Rise logos and fonts, verify the stable ID and SHA-256 from
+   `/brand-assets.json`. Never copy a client screenshot into public storage
+   merely because it appears on a public case study.
 
 ## Output contract
 
@@ -33,8 +38,12 @@ Selected `AssetRecord[]`, rejected candidates with reason, rights summary and cr
 
 ## Stop conditions
 
-Stop on confidential/pending-redaction assets, missing license confirmation, unapproved client visuals, private paths, altered client UI, or a visual unrelated to the claim.
+Stop on confidential/pending-redaction assets, missing license confirmation,
+unapproved client visuals, private paths, hash drift, altered client UI/logo,
+or a visual unrelated to the claim.
 
 ## Pressure test
 
-Good: approved Rise UI with a documented crop is selectable. Bad: a public-looking client screenshot without cross-platform permission is rejected, not assumed licensed.
+Good: approved Rise UI with a hash, focal point and preserve crop is selectable
+for `app-case-study`. Bad: a public-looking client screenshot without
+cross-platform permission is rejected, not assumed licensed.

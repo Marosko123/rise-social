@@ -1,4 +1,7 @@
 import { RISE_PUBLIC_ASSET_CATALOG_V1 } from '../../brand/assets.v1';
+import { RISE_BRAND_ASSET_MANIFEST_V1 } from '../../brand/brand-assets.v1';
+import { RISE_BRAND_COPY_V1 } from '../../brand/brand-copy.v1';
+import { INSTAGRAM_CAROUSEL_PLAYBOOK_V1 } from '../../brand/instagram-carousel-playbook.v1';
 import { RISE_VISUAL_GENERATION_PLAYBOOK_V1 } from '../../brand/visual-generation-playbook.v1';
 import { RISE_CONTENT_PLAN } from '@/contentPlan/plan';
 
@@ -128,9 +131,96 @@ export const PUBLIC_VISUAL_PLAYBOOK = {
   humanReadableUrl: `${PUBLIC_BASE_URL}/visual-playbook/`,
   markdownUrl: `${PUBLIC_BASE_URL}/visual-playbook.md`,
   assetManifestUrl: `${PUBLIC_BASE_URL}/visual-assets.json`,
+  instagramCarouselPlaybookUrl: `${PUBLIC_BASE_URL}/instagram-carousel-playbook.json`,
+  brandAssetManifestUrl: `${PUBLIC_BASE_URL}/brand-assets.json`,
+  brandCopyUrl: `${PUBLIC_BASE_URL}/brand-copy.json`,
   contentPlanUrl: `${PUBLIC_BASE_URL}/content-plan/`,
   playbook: RISE_VISUAL_GENERATION_PLAYBOOK_V1,
 } as const;
+
+export const PUBLIC_INSTAGRAM_CAROUSEL_PLAYBOOK = {
+  ...INSTAGRAM_CAROUSEL_PLAYBOOK_V1,
+  canonicalUrl: `${PUBLIC_BASE_URL}/instagram-carousel-playbook.json`,
+  humanReadableUrl: `${PUBLIC_BASE_URL}/instagram-carousel-playbook/`,
+  markdownUrl: `${PUBLIC_BASE_URL}/instagram-carousel-playbook.md`,
+  brandAssetManifestUrl: `${PUBLIC_BASE_URL}/brand-assets.json`,
+  brandCopyUrl: `${PUBLIC_BASE_URL}/brand-copy.json`,
+  visualAssetManifestUrl: `${PUBLIC_BASE_URL}/visual-assets.json`,
+} as const;
+
+export const PUBLIC_BRAND_ASSET_MANIFEST =
+  RISE_BRAND_ASSET_MANIFEST_V1;
+
+export const PUBLIC_BRAND_COPY = RISE_BRAND_COPY_V1;
+
+export function renderPublicInstagramCarouselPlaybookMarkdown(): string {
+  const playbook = PUBLIC_INSTAGRAM_CAROUSEL_PLAYBOOK;
+  const narrative = playbook.narrative
+    .map(
+      (slide, index) =>
+        `${index + 1}. **${slide.role}** — ${slide.question} ${slide.evidence}${
+          slide.required ? '' : ' Ak chýba dôkaz, tento slide sa vynechá.'
+        }`,
+    )
+    .join('\n');
+  const sources = playbook.sources
+    .map(source => `- [${source.id}](${source.url}) — ${source.role}`)
+    .join('\n');
+
+  return `# Rise Instagram App Carousel
+
+Kanonická verzia: \`${playbook.id}\` · kontrola ${playbook.checkedAt}
+
+${playbook.purpose}
+
+## Načítanie pre ChatGPT
+
+\`${playbook.loadOrder.join(' → ')}\`
+
+## Formát
+
+- ${playbook.format.width} × ${playbook.format.height} px, ${playbook.format.aspectRatio}
+- ${playbook.format.columns}-stĺpcový grid, bezpečný okraj ${playbook.format.safeMargin} px
+- ${playbook.format.slideCount.preferred} slidov; ${playbook.format.slideCount.fallback} iba ak chýba verejný dôkaz
+
+## Príbeh aplikácie
+
+${narrative}
+
+## Text
+
+- Cover: ${playbook.text.coverHeadline.minWords}–${playbook.text.coverHeadline.maxWords} slov, najviac ${playbook.text.coverHeadline.maxLines} riadky
+- Obsahový headline: ${playbook.text.contentHeadline.minWords}–${playbook.text.contentHeadline.maxWords} slov
+- Body: ${playbook.text.body.minWords}–${playbook.text.body.maxWords} slov, najviac ${playbook.text.body.maxSentences} vety
+- Slide spolu: najviac ${playbook.text.slideTotal.maxWords} slov
+- Callout: ${playbook.text.callout.minWords}–${playbook.text.callout.maxWords} slová, najviac ${playbook.text.callout.maxCount}
+- ${playbook.text.claimRule}
+
+## Brand a produktový dôkaz
+
+- Playfair Display iba na krátky headline; Inter na funkčný text.
+- Canvas ${playbook.palette.canvas}; surface ${playbook.palette.surface}; gold ${playbook.palette.gold}; text ${playbook.palette.strongText}.
+- ${playbook.productEvidence.preserve}
+- ${playbook.productEvidence.rights}
+- Logo: asset \`${playbook.logo.symbolAssetId}\` + presný text \`${playbook.logo.wordmarkText}\`.
+
+## QA
+
+${playbook.qa.beforeRender.map(item => `- Pred renderom: ${item}`).join('\n')}
+${playbook.qa.afterRender.map(item => `- Po renderi: ${item}`).join('\n')}
+
+## Verejné kontrakty
+
+- Brand assety: ${PUBLIC_BASE_URL}/brand-assets.json
+- Kanonické texty: ${PUBLIC_BASE_URL}/brand-copy.json
+- Bezpečný katalóg obrázkov: ${PUBLIC_BASE_URL}/visual-assets.json
+- Vizuálny AI playbook: ${PUBLIC_BASE_URL}/visual-playbook.json
+
+## Zdroje
+
+${sources}
+`;
+}
 
 export function renderPublicVisualPlaybookMarkdown(): string {
   const playbook = RISE_VISUAL_GENERATION_PLAYBOOK_V1;

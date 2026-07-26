@@ -210,6 +210,23 @@ export function reviewReportPasses(review: ReviewReport): boolean {
   return review.approved && !review.blocker && review.scorecard.passed && scores.every(score => score >= 4);
 }
 
+export const CarouselSlideRoleSchema = z.enum([
+  'cover',
+  'problem',
+  'scope',
+  'flow',
+  'ui-detail',
+  'decision',
+  'evidence',
+  'closing',
+]);
+export type CarouselSlideRole = z.infer<typeof CarouselSlideRoleSchema>;
+
+const CarouselPointSchema = z.object({
+  x: z.number().min(0).max(100),
+  y: z.number().min(0).max(100),
+});
+
 export const CarouselSlideSchema = z.object({
   id: z.string().min(1),
   eyebrow: z.string().max(32),
@@ -219,8 +236,37 @@ export const CarouselSlideSchema = z.object({
   claimIds: z.array(z.string().min(1)).min(1),
   imagePath: z.string().min(1).optional(),
   assetId: z.string().min(1).optional(),
+  role: CarouselSlideRoleSchema.optional(),
+  assetFit: z.enum(['contain', 'cover']).optional(),
+  crop: z
+    .object({
+      aspectRatio: z.literal('4:5'),
+      focalPoint: CarouselPointSchema,
+      preserve: z.string().min(1).max(500),
+    })
+    .optional(),
+  callouts: z
+    .array(
+      z.object({
+        label: z.string().min(1).max(48),
+        anchor: CarouselPointSchema,
+      }),
+    )
+    .max(3)
+    .optional(),
+  surface: z.enum(['canvas', 'surface', 'media']).optional(),
   visualLayout: z
-    .enum(['image-detail', 'diagram', 'calm-text', 'full-bleed', 'split-detail'])
+    .enum([
+      'image-detail',
+      'diagram',
+      'calm-text',
+      'full-bleed',
+      'split-detail',
+      'app-hero',
+      'app-flow',
+      'ui-focus',
+      'proof',
+    ])
     .optional(),
 });
 export type CarouselSlide = z.infer<typeof CarouselSlideSchema>;
@@ -266,7 +312,13 @@ export const PostConceptSchema = z.object({
   visualKind: z.enum(['product-screenshot', 'team-photo', 'branded-diagram']),
   project: z.string().min(1).max(500).optional(),
   carouselTemplate: z
-    .enum(['product-anatomy', 'decision-note', 'before-after', 'signal-noise'])
+    .enum([
+      'product-anatomy',
+      'decision-note',
+      'before-after',
+      'signal-noise',
+      'app-case-study',
+    ])
     .optional(),
   slides: z.array(CarouselSlideSchema).min(4).max(8),
   platforms: PlatformVariantsSchema,

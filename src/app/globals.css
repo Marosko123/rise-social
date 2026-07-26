@@ -852,6 +852,270 @@ summary:focus-visible {
   text-decoration: none;
 }
 
+.official-brand-mark {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+  display: block;
+  object-fit: contain;
+}
+
+.instagram-carousel-playbook-page {
+  overflow: clip;
+}
+
+.carousel-playbook-hero {
+  min-height: 690px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 120px 0 72px;
+  border-bottom: 1px solid var(--line);
+  background:
+    radial-gradient(circle at 82% 28%, rgb(218 181 73 / .14), transparent 24rem);
+}
+
+.carousel-playbook-hero h1,
+.carousel-story h2,
+.carousel-rules h2,
+.carousel-contract h2 {
+  margin: 0;
+  font-family: "Playfair Display", serif;
+  font-weight: 500;
+  letter-spacing: -.045em;
+  text-wrap: balance;
+}
+
+.carousel-playbook-hero h1 {
+  max-width: 980px;
+  font-size: clamp(64px, 7.6vw, 116px);
+  line-height: .92;
+}
+
+.carousel-playbook-hero > p:not(.kicker) {
+  max-width: 720px;
+  margin: 32px 0 0;
+  color: var(--body);
+  font-size: 18px;
+  line-height: 1.65;
+}
+
+.carousel-spec-row {
+  margin-top: 62px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.carousel-spec-row span {
+  min-height: 74px;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  color: var(--gold-soft);
+  border-left: 1px solid var(--line);
+  background: rgb(12 12 12 / .75);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.carousel-spec-row span:first-child { border-left: 0; }
+
+.carousel-story {
+  padding-top: 140px;
+}
+
+.carousel-section-copy {
+  max-width: 770px;
+  margin-bottom: 52px;
+}
+
+.carousel-section-copy h2,
+.carousel-rules h2,
+.carousel-contract h2 {
+  font-size: clamp(42px, 5vw, 76px);
+  line-height: .98;
+}
+
+.carousel-section-copy > p:last-child,
+.carousel-contract > p:last-child {
+  max-width: 690px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.carousel-story-grid {
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 12px;
+  list-style: none;
+}
+
+.carousel-story-grid li {
+  min-height: 320px;
+  position: relative;
+  grid-column: span 4;
+  padding: 30px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background:
+    linear-gradient(145deg, rgb(218 181 73 / .055), transparent 45%),
+    var(--surface);
+}
+
+.carousel-story-grid li:first-child,
+.carousel-story-grid li:last-child {
+  grid-column: span 6;
+}
+
+.carousel-story-grid li > span {
+  color: var(--gold);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .16em;
+}
+
+.carousel-story-grid li > small {
+  margin-left: 14px;
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+
+.carousel-story-grid h3 {
+  max-width: 350px;
+  margin: 68px 0 14px;
+  font: 500 28px/1.07 "Playfair Display", serif;
+  letter-spacing: -.035em;
+}
+
+.carousel-story-grid p {
+  max-width: 390px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.carousel-story-grid em {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  color: var(--gold-soft);
+  font-size: 10px;
+  font-style: normal;
+}
+
+.carousel-rules {
+  padding-top: 140px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.carousel-rules article {
+  min-height: 520px;
+  padding: 34px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--surface);
+}
+
+.carousel-rules h2 { font-size: 46px; }
+
+.carousel-rules ul {
+  margin: 52px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 15px;
+  list-style: none;
+}
+
+.carousel-rules li,
+.carousel-rules article > p:last-child {
+  padding-left: 20px;
+  position: relative;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.carousel-rules li::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  position: absolute;
+  left: 0;
+  top: .55em;
+  border-radius: 50%;
+  background: var(--gold);
+}
+
+.carousel-palette {
+  margin: 52px 0 30px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+}
+
+.carousel-palette > span {
+  aspect-ratio: 1;
+  min-width: 0;
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+}
+
+.carousel-palette small {
+  position: absolute;
+  left: 8px;
+  bottom: 7px;
+  max-width: calc(100% - 16px);
+  overflow: hidden;
+  color: var(--body);
+  font-size: 8px;
+  text-overflow: ellipsis;
+}
+
+.carousel-contract {
+  margin-top: 140px;
+  padding: 86px;
+  border: 1px solid rgb(218 181 73 / .3);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 90% 12%, rgb(218 181 73 / .12), transparent 22rem),
+    var(--surface);
+}
+
+.carousel-contract code {
+  margin-top: 50px;
+  padding: 20px 24px;
+  display: block;
+  overflow-x: auto;
+  color: var(--gold-pale);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--canvas);
+  font: 500 13px/1.7 Inter, sans-serif;
+  white-space: nowrap;
+}
+
+.carousel-contract > p:last-child { margin: 26px 0 0; }
+
+.carousel-playbook-footer {
+  align-items: flex-start;
+}
+
+.carousel-playbook-footer > p {
+  max-width: 560px;
+}
+
 @media (hover: hover) and (pointer: fine) {
   .plan-filters button,
   .entry-copy summary,
@@ -921,6 +1185,12 @@ summary:focus-visible {
   }
   .disclosure-list article > div:first-child { grid-column: 1 / -1; }
   .disclosure-list article > div:not(:first-child) { padding-top: 0; }
+  .carousel-story-grid li,
+  .carousel-story-grid li:first-child,
+  .carousel-story-grid li:last-child { grid-column: span 6; }
+  .carousel-rules { grid-template-columns: 1fr; }
+  .carousel-rules article { min-height: 0; }
+  .carousel-contract { padding: 60px 44px; }
 }
 
 @media (max-width: 560px) {
@@ -976,6 +1246,28 @@ summary:focus-visible {
   }
   .plan-footer > div { align-items: flex-start; }
   .plan-footer .brand-mark { flex: 0 0 auto; }
+  .official-brand-mark { width: 36px; height: 36px; }
+  .carousel-playbook-hero { min-height: 0; padding: 72px 0 50px; }
+  .carousel-playbook-hero h1 { font-size: 52px; }
+  .carousel-playbook-hero > p:not(.kicker) { font-size: 16px; }
+  .carousel-spec-row { grid-template-columns: repeat(2, 1fr); margin-top: 40px; }
+  .carousel-spec-row span:nth-child(3) { border-left: 0; border-top: 1px solid var(--line); }
+  .carousel-spec-row span:nth-child(4) { border-top: 1px solid var(--line); }
+  .carousel-story { padding-top: 90px; }
+  .carousel-story-grid li,
+  .carousel-story-grid li:first-child,
+  .carousel-story-grid li:last-child {
+    min-height: 270px;
+    grid-column: 1 / -1;
+    padding: 24px;
+  }
+  .carousel-story-grid h3 { margin-top: 48px; font-size: 25px; }
+  .carousel-rules { padding-top: 90px; }
+  .carousel-rules article { padding: 26px; }
+  .carousel-rules h2 { font-size: 39px; }
+  .carousel-contract { margin-top: 90px; padding: 44px 24px; }
+  .carousel-contract code { margin-top: 34px; }
+  .carousel-playbook-footer { gap: 30px; }
 }
 
 /* Rise Social Studio 2.0 operating view */

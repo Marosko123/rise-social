@@ -6,13 +6,16 @@ description: Use when creating or reviewing Rise.sk social copy, visuals, themes
 # Rise brand context
 
 Read `brand/voice.sk.json`, `brand/visual-tokens.json`,
-`brand/visual-generation-playbook.v1.ts` and relevant published Rise pages. Keep
+`brand/visual-generation-playbook.v1.ts` and, for `app-case-study`,
+`brand/instagram-carousel-playbook.v1.ts`, then relevant published Rise pages. Keep
 software, products, data and delivery dominant. The profile identity is
 `Rise.sk`: “Softvér, ktorý prináša výsledky.” and “Softvér, dáta a AI. Jeden tím od
 návrhu po prevádzku.”
 
 In public ChatGPT context, load the canonical contract from
-`https://marosko123.github.io/rise-social/visual-playbook.json`.
+`https://marosko123.github.io/rise-social/visual-playbook.json`. For an
+application carousel also load `/brand-copy.json`, `/brand-assets.json` and
+`/instagram-carousel-playbook.json` before the exact case study.
 
 ## Inputs
 
@@ -43,9 +46,10 @@ one isolated post.
 Stop on private material, unsupported results, an unconfirmed person/handle,
 generative imagery without explicit approval, or a conflict with the tracked profile.
 Also block generic robots, glowing AI brains, fake dashboards, fake people, AI text,
-invented graphs, illegible code and decoration with no communicative purpose.
+invented graphs, illegible code, a CSS/AI replacement for the original Rise logo
+and decoration with no communicative purpose.
 
 ## Pressure test
 
-Good: an owned UI detail with a calm gold navigation accent follows the system. Bad:
-a glowing robot beside invented metrics is rejected before visual drafting.
+Good: `app-case-study` uses the original Rise mark and an owned UI detail with a
+calm gold navigation accent. Bad: a glowing robot beside invented metrics is rejected.

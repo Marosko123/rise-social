@@ -240,10 +240,70 @@ test.describe('GitHub Pages public presentation', () => {
     expect(llms).toContain(
       `${PUBLIC_ORIGIN}${BASE_PATH}/visual-assets.json`,
     );
+    expect(llms).toContain(
+      `${PUBLIC_ORIGIN}${BASE_PATH}/instagram-carousel-playbook.json`,
+    );
+    expect(llms).toContain(
+      `${PUBLIC_ORIGIN}${BASE_PATH}/brand-assets.json`,
+    );
+    expect(llms).toContain(
+      `${PUBLIC_ORIGIN}${BASE_PATH}/brand-copy.json`,
+    );
 
     const apiResponse = await request.get(
       `${PAGES_ORIGIN}${BASE_PATH}/api/runs/demo/approve/`,
     );
     expect(apiResponse.status()).toBe(404);
+  });
+
+  test('serves the application carousel playbook and exact brand contracts', async ({
+    page,
+    request,
+  }) => {
+    for (const viewport of [
+      { width: 1440, height: 1000 },
+      { width: 390, height: 844 },
+    ]) {
+      await page.setViewportSize(viewport);
+      await page.goto(`${BASE_PATH}/instagram-carousel-playbook/`);
+      await expect(
+        page.getByRole('heading', {
+          name: 'Aplikácia ako krátky produktový príbeh.',
+        }),
+      ).toBeVisible();
+      await expect(page.locator('.carousel-story-grid > li')).toHaveCount(7);
+      expect(
+        await page.evaluate(
+          () =>
+            document.documentElement.scrollWidth -
+            document.documentElement.clientWidth,
+        ),
+      ).toBe(0);
+    }
+
+    const contracts = [
+      ['instagram-carousel-playbook.json', 'rise-instagram-app-carousel-v1'],
+      ['brand-assets.json', 'rise-brand-assets-v1'],
+      ['brand-copy.json', 'rise-brand-copy-sk-v1'],
+    ] as const;
+    for (const [path, id] of contracts) {
+      const response = await request.get(
+        `${PAGES_ORIGIN}${BASE_PATH}/${path}`,
+      );
+      expect(response.status(), path).toBe(200);
+      expect((await response.json()).id).toBe(id);
+    }
+
+    const markdown = await request.get(
+      `${PAGES_ORIGIN}${BASE_PATH}/instagram-carousel-playbook.md`,
+    );
+    expect(markdown.status()).toBe(200);
+    expect(await markdown.text()).toContain('# Rise Instagram App Carousel');
+
+    const logo = await request.get(
+      `${PAGES_ORIGIN}${BASE_PATH}/brand/Rise_logo.svg`,
+    );
+    expect(logo.status()).toBe(200);
+    expect(await logo.text()).toContain('goldGradient');
   });
 });
